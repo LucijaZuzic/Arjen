@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "738044207945",
+    "project_id": "arjen-be281",
+    "storage_bucket": "arjen-be281.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738044207945:android:4ebb620bbc9437b6eff098",
+        "android_client_info": {
+          "package_name": "com.example.arjen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "738044207945-l541innuk3m898b7u1kmknnrsg8dn2fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgMddEZ4p04lI6eML4dem3FuHXCdrfUR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "738044207945-l541innuk3m898b7u1kmknnrsg8dn2fn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
