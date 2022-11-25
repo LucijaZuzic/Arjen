@@ -1,29 +1,24 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.utility.Database;
 import com.example.arjen.R;
 import com.example.arjen.adapters.CustomAdapterStoryList;
 import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.interfaces.ShowListInterface;
-import com.example.arjen.utility.myTTS;
+
+import java.util.Objects;
 
 public class StoryList extends MenuActivity implements ShowListInterface {
     private ImageButton addStory, startSearch;
-    private CustomAdapterStoryList customAdapterStoryList;
     private RecyclerView storiesRecyclerView;
     private EditText searchStory;
     private TextView noResults;
@@ -55,9 +50,7 @@ public class StoryList extends MenuActivity implements ShowListInterface {
             quizId = null;
             startActivity(intent);
         });
-        startSearch.setOnClickListener(v -> {
-            Database.Stories.getWithTitle(searchStory.getText().toString(), this);
-        });
+        startSearch.setOnClickListener(v -> Database.Stories.getWithTitle(searchStory.getText().toString(), this));
     }
 
     @Override
@@ -67,9 +60,9 @@ public class StoryList extends MenuActivity implements ShowListInterface {
     }
 
     public void showList() {
-        customAdapterStoryList = new CustomAdapterStoryList(this);
+        CustomAdapterStoryList customAdapterStoryList = new CustomAdapterStoryList(this);
         storiesRecyclerView.setAdapter(customAdapterStoryList);
-        if (storiesRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(storiesRecyclerView.getAdapter()).getItemCount() == 0) {
             storiesRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -81,20 +74,20 @@ public class StoryList extends MenuActivity implements ShowListInterface {
 
     public void playStory(String id) {
         Intent intent = new Intent(getApplicationContext(), PlayStory.class);
-        this.id = id;
+        MenuActivity.id = id;
         quizId = null;
         startActivity(intent);
     }
 
     public void editStory(String id) {
         Intent intent = new Intent(getApplicationContext(), AddStory.class);
-        this.id = id;
+        MenuActivity.id = id;
         quizId = null;
         startActivity(intent);
     }
 
     public void deleteStory(int position) {
-        storiesRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(storiesRecyclerView.getAdapter()).notifyItemRemoved(position);
         storiesRecyclerView.getAdapter().notifyItemRangeChanged(position, Database.Stories.storyList.size() - position);
         setupTTS();
     }
@@ -111,5 +104,7 @@ public class StoryList extends MenuActivity implements ShowListInterface {
             textToSpeak.add(getResources().getString(R.string.story_title) + " " + getResources().getString(R.string.is) + " " + story.title);
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

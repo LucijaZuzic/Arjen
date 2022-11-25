@@ -1,18 +1,16 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.adapters.CustomAdapterQuizQuestionList;
 import com.example.arjen.utility.Database;
@@ -22,13 +20,14 @@ import com.example.arjen.utility.interfaces.QuizInterface;
 import com.example.arjen.utility.interfaces.ShowListInterface;
 import com.example.arjen.utility.myTTS;
 
+import java.util.Objects;
+
 public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInterface {
     private ImageButton addQuiz, resetQuiz, navigate, playQuiz, addQuestion, deleteQuiz, playTitle, playSubject, quizList, newQuiz;
     private LinearLayout quizData, questionData;
     private EditText title, subject;
     private Database.Quizes.Quiz quiz;
     private int page = 1;
-    private CustomAdapterQuizQuestionList customAdapterQuizQuestionList;
     private RecyclerView questionRecyclerView;
     private TextView noResults;
 
@@ -65,8 +64,8 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     public void registerListeners() {
         newQuiz.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
         addQuiz.setOnClickListener(v -> {
@@ -77,14 +76,12 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
             }
             onBackPressed();
         });
-        resetQuiz.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        resetQuiz.setOnClickListener(v -> onBackPressed());
         addQuestion.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            id = null;
+            MenuActivity.id = null;
             if (quiz != null) {
-                quizId = quiz.id;
+                MenuActivity.quizId = quiz.id;
             }
             startActivity(intent);
         });
@@ -93,20 +90,20 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
                 page = 2;
                 quizData.setVisibility(View.GONE);
                 questionData.setVisibility(View.VISIBLE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_back_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_back_24));
             } else {
                 page = 1;
                 quizData.setVisibility(View.VISIBLE);
                 questionData.setVisibility(View.GONE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_forward_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
         playQuiz.setOnClickListener(v -> {
             if (quiz != null) {
                 Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
                 if (quiz != null) {
-                    id = quiz.id;
-                    quizId = quiz.id;
+                    MenuActivity.id = quiz.id;
+                    MenuActivity.quizId = quiz.id;
                 }
                 startActivity(intent);
             }
@@ -117,23 +114,19 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
             }
             onBackPressed();
         });
-        playTitle.setOnClickListener(v -> {
-            myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        playSubject.setOnClickListener(v -> {
-            myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
+        playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         quizList.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
     }
 
     @Override
     public void fillData() {
-        if (id != null) {
+        if (MenuActivity.id != null) {
             quiz = Database.Quizes.findId(id);
             Database.Questions.getForQuiz(id, this);
             playQuiz.setVisibility(View.VISIBLE);
@@ -144,8 +137,8 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
+                MenuActivity.id = null;
+                MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
             }
@@ -165,9 +158,9 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
 
     @Override
     public void showList() {
-        customAdapterQuizQuestionList = new CustomAdapterQuizQuestionList(this);
+        CustomAdapterQuizQuestionList customAdapterQuizQuestionList = new CustomAdapterQuizQuestionList(this);
         questionRecyclerView.setAdapter(customAdapterQuizQuestionList);
-        if (questionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(questionRecyclerView.getAdapter()).getItemCount() == 0) {
             questionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -179,7 +172,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
 
     public void playQuestion(String id) {
         Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-        this.id = id;
+        MenuActivity.id = id;
         if (quiz != null) {
             quizId = quiz.id;
         }
@@ -188,7 +181,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
 
     public void editQuestion(String id) {
         Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-        this.id = id;
+        MenuActivity.id = id;
         if (quiz != null) {
             quizId = quiz.id;
         }
@@ -196,7 +189,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     }
 
     public void deleteQuestion(int position) {
-        questionRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(questionRecyclerView.getAdapter()).notifyItemRemoved(position);
         questionRecyclerView.getAdapter().notifyItemRangeChanged(position, Database.Questions.questionList.size() - position);
         if (questionRecyclerView.getAdapter().getItemCount() == 0) {
             questionRecyclerView.setVisibility(View.GONE);
@@ -217,5 +210,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

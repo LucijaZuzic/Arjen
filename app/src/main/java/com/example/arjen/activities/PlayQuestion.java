@@ -1,39 +1,34 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.R;
 import com.example.arjen.adapters.CustomAdapterPlayQuizQuestionOption;
-import com.example.arjen.adapters.CustomAdapterQuizQuestionOption;
 import com.example.arjen.utility.Database;
 import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.myTTS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayQuestion extends MenuActivity {
     private ImageButton playTitle, playSubject, navigate, back, playQuestionText, addQuestion, newQuestion, deleteQuestion;
     private LinearLayout quizData, questionData, optionData;
-    private List<String> options = new ArrayList<String>();
-    private CustomAdapterPlayQuizQuestionOption customAdapterPlayQuizQuestionOption;
+    private List<String> options = new ArrayList<>();
     private RecyclerView optionRecyclerView;
     private Database.Questions.Question question;
     private int page = 1, answer = -1;
     private TextView title, subject, questionText, noResults;
-    private Database.Quizes.Quiz quiz;
 
     @Override
     public int getLayout() {
@@ -73,34 +68,32 @@ public class PlayQuestion extends MenuActivity {
                 quizData.setVisibility(View.GONE);
                 questionData.setVisibility(View.GONE);
                 optionData.setVisibility(View.VISIBLE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_back_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_back_24));
             } else {
                 page = 1;
                 quizData.setVisibility(View.VISIBLE);
                 questionData.setVisibility(View.VISIBLE);
                 optionData.setVisibility(View.GONE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_forward_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
-        back.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        back.setOnClickListener(v -> onBackPressed());
         addQuestion.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(),AddQuestion.class);
             if (question != null) {
-                id = question.id;
-                quizId = question.quizId;
+                MenuActivity.id = question.id;
+                MenuActivity.quizId = question.quizId;
             }
             startActivity(intent);
         });
-        playQuestionText.setOnClickListener(v -> {
-            myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
+        playQuestionText.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         newQuestion.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            id = null;
+            MenuActivity.id = null;
             if (question != null) {
-                quizId = question.quizId;
+                MenuActivity.quizId = question.quizId;
             }
             startActivity(intent);
         });
@@ -118,52 +111,52 @@ public class PlayQuestion extends MenuActivity {
 
     @Override
     public void fillData() {
-        if (quizId == null) {
+        if (MenuActivity.quizId == null) {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             finish();
             startActivity(intent);
         } else {
-            quiz = Database.Quizes.findId(quizId);
+            Database.Quizes.Quiz quiz = Database.Quizes.findId(quizId);
             if (quiz != null) {
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
+                MenuActivity.id = null;
+                MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
             }
-            if (id != null) {
-                question = Database.Questions.findId(id);
+            if (MenuActivity.id != null) {
+                question = Database.Questions.findId(MenuActivity.id);
                 addQuestion.setVisibility(View.VISIBLE);
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    quizId = question.quizId;
+                    MenuActivity.quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
                     Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    id = null;
-                    quizId = null;
+                    MenuActivity.id = null;
+                    MenuActivity.quizId = null;
                     finish();
                     startActivity(intent);
                 }
             } else {
                 Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                id = null;
-                quizId = null;
+                MenuActivity.id = quiz.id;
+                MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
             }
         }
         optionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        customAdapterPlayQuizQuestionOption = new CustomAdapterPlayQuizQuestionOption(options, this);
+        CustomAdapterPlayQuizQuestionOption customAdapterPlayQuizQuestionOption = new CustomAdapterPlayQuizQuestionOption(options, this);
         optionRecyclerView.setAdapter(customAdapterPlayQuizQuestionOption);
-        if (optionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(optionRecyclerView.getAdapter()).getItemCount() == 0) {
             optionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -196,5 +189,7 @@ public class PlayQuestion extends MenuActivity {
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

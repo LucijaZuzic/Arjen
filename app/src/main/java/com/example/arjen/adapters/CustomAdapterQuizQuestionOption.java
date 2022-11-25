@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -54,33 +55,27 @@ public class CustomAdapterQuizQuestionOption extends RecyclerView.Adapter<Custom
         option = viewHolder.getOption();
         playOption = viewHolder.getPlayOption();
         markAsAnswer = viewHolder.getMarkAsAnswer();
-        editOption = viewHolder.getEditOptionn();
+        editOption = viewHolder.getEditOption();
         deleteOption = viewHolder.getDeleteOption();
         moveUp = viewHolder.getMoveUp();
         moveDown = viewHolder.getMoveDown();
-        optionNumber.setText(Integer.toString(position + 1) + ". " + addQuestion.getString(R.string.option_substring));
+        optionNumber.setText((position + 1) + ". " + addQuestion.getString(R.string.option_substring));
         option.setText(options.get(position));
-        playOption.setOnClickListener(v -> {
-            myTTS.speak(option.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
+        playOption.setOnClickListener(v -> myTTS.speak(option.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         if (addQuestion.getAnswer() == position) {
-            markAsAnswer.setImageDrawable(addQuestion.getDrawable(R.drawable.ic_baseline_check_24));
+            markAsAnswer.setImageDrawable(AppCompatResources.getDrawable(addQuestion.getApplicationContext(), R.drawable.ic_baseline_check_24));
             option.setTypeface(null, Typeface.BOLD);
         } else {
-            markAsAnswer.setImageDrawable(addQuestion.getDrawable(R.drawable.ic_baseline_close_24));
+            markAsAnswer.setImageDrawable(AppCompatResources.getDrawable(addQuestion.getApplicationContext(), R.drawable.ic_baseline_close_24));
             option.setTypeface(null, Typeface.NORMAL);
         }
         markAsAnswer.setOnClickListener(v -> {
             addQuestion.markAsAnswer(position);
-            markAsAnswer.setImageDrawable(addQuestion.getDrawable(R.drawable.ic_baseline_check_24));
+            markAsAnswer.setImageDrawable(AppCompatResources.getDrawable(addQuestion.getApplicationContext(), R.drawable.ic_baseline_check_24));
             option.setTypeface(null, Typeface.BOLD);
         });
-        editOption.setOnClickListener(v -> {
-            addQuestion.editOption(position);
-        });
-        deleteOption.setOnClickListener(v -> {
-            addQuestion.removeOption(position);
-        });
+        editOption.setOnClickListener(v -> addQuestion.editOption(position));
+        deleteOption.setOnClickListener(v -> addQuestion.removeOption(position));
         moveDown.setEnabled(position != options.size() - 1);
         moveDown.setOnClickListener(v -> {
             if (position != options.size() - 1) {
@@ -139,7 +134,7 @@ public class CustomAdapterQuizQuestionOption extends RecyclerView.Adapter<Custom
             return markAsAnswer;
         }
 
-        public ImageButton getEditOptionn() {
+        public ImageButton getEditOption() {
             return editOption;
         }
 

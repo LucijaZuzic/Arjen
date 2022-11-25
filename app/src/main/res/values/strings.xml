@@ -48,4 +48,10 @@
     <string name="quiz_list">Popis kvizova</string>
     <string name="story_list">Popis priča</string>
     <string name="main_activity">Početni izbornik</string>
+    <string name="numbers">Brojevi</string>
+    <string name="numbers_sound">Brojevi zvukom</string>
+    <string name="numbers_words">Brojevi riječima</string>
+    <string name="numbers_words_sound">Brojevi riječima ili zvukom</string>
+    <string name="number_to_guess">Zadani broj</string>
+    <string name="number_input">Uneseni broj</string>
 </resources>

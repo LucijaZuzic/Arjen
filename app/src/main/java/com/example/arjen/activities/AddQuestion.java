@@ -1,12 +1,10 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.EditText;
@@ -22,21 +20,20 @@ import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.myTTS;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class AddQuestion extends MenuActivity {
     private ImageButton playTitle, playSubject, addQuestion, resetQuestion, navigate, playQuestion, deleteQuestion, playQuestionText, playOption, addOption, updateOption, resetOption, newQuestion;
     private LinearLayout quizData, questionData, optionData;
     private EditText questionText, optionText;
     private TextView title, subject, modeText, noResults;
-    private List<String> options = new ArrayList<String>();
+    private List<String> options = new ArrayList<>();
     private CustomAdapterQuizQuestionOption customAdapterQuizQuestionOption;
     private RecyclerView optionRecyclerView;
     private Database.Questions.Question question;
     private int option_to_edit = -1, page = 1, answer = -1;
-    private Database.Quizes.Quiz quiz;
 
     @Override
     public int getLayout() {
@@ -113,7 +110,7 @@ public class AddQuestion extends MenuActivity {
             }
             customAdapterQuizQuestionOption.notifyItemRemoved(position);
             customAdapterQuizQuestionOption.notifyItemRangeChanged(position, options.size() - position);
-            if (optionRecyclerView.getAdapter().getItemCount() == 0) {
+            if (Objects.requireNonNull(optionRecyclerView.getAdapter()).getItemCount() == 0) {
                 optionRecyclerView.setVisibility(View.GONE);
                 noResults.setVisibility(View.VISIBLE);
             } else {
@@ -133,7 +130,7 @@ public class AddQuestion extends MenuActivity {
         options.add(optionText.getText().toString());
         customAdapterQuizQuestionOption.notifyItemInserted(options.size() - 1);
         optionRecyclerView.scrollToPosition(options.size() - 1);
-        if (optionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(optionRecyclerView.getAdapter()).getItemCount() == 0) {
             optionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -187,29 +184,27 @@ public class AddQuestion extends MenuActivity {
             }
             onBackPressed();
         });
-        resetQuestion.setOnClickListener(v -> {
-            onBackPressed();
-        });
+        resetQuestion.setOnClickListener(v -> onBackPressed());
         navigate.setOnClickListener(v -> {
             if (page == 1) {
                 page = 2;
                 quizData.setVisibility(View.GONE);
                 questionData.setVisibility(View.GONE);
                 optionData.setVisibility(View.VISIBLE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_back_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_back_24));
             } else {
                 page = 1;
                 quizData.setVisibility(View.VISIBLE);
                 questionData.setVisibility(View.VISIBLE);
                 optionData.setVisibility(View.GONE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_forward_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
         playQuestion.setOnClickListener(v -> {
             if (question != null) {
                 Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
                 if (question != null) {
-                    this.id = question.id;
+                    id = question.id;
                     quizId = question.quizId;
                 }
                 startActivity(intent);
@@ -221,15 +216,11 @@ public class AddQuestion extends MenuActivity {
             }
             onBackPressed();
         });
-        playQuestionText.setOnClickListener(v -> {
-            myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        playOption.setOnClickListener(v -> {
-            myTTS.speak(optionText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        addOption.setOnClickListener(v -> {
-            insertOption();
-        });
+        playQuestionText.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playOption.setOnClickListener(v -> myTTS.speak(optionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        addOption.setOnClickListener(v -> insertOption());
         updateOption.setOnClickListener(v -> {
             options.set(option_to_edit, optionText.getText().toString());
             customAdapterQuizQuestionOption.notifyItemChanged(option_to_edit);
@@ -259,37 +250,37 @@ public class AddQuestion extends MenuActivity {
 
     @Override
     public void fillData() {
-        if (quizId == null) {
+        if (MenuActivity.quizId == null) {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             finish();
             startActivity(intent);
         } else {
-            quiz = Database.Quizes.findId(quizId);
+            Database.Quizes.Quiz quiz = Database.Quizes.findId(quizId);
             if (quiz != null) {
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
+                MenuActivity.id = null;
+                MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
             }
-            if (id != null) {
-                question = Database.Questions.findId(id);
+            if (MenuActivity.id != null) {
+                question = Database.Questions.findId(MenuActivity.id);
                 playQuestion.setVisibility(View.VISIBLE);
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    quizId = question.quizId;
+                    MenuActivity.quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
                     Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    id = null;
-                    quizId = null;
+                    MenuActivity.id = null;
+                    MenuActivity.quizId = null;
                     finish();
                     startActivity(intent);
                 }
@@ -298,7 +289,7 @@ public class AddQuestion extends MenuActivity {
         optionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         customAdapterQuizQuestionOption = new CustomAdapterQuizQuestionOption(options, this);
         optionRecyclerView.setAdapter(customAdapterQuizQuestionOption);
-        if (optionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(optionRecyclerView.getAdapter()).getItemCount() == 0) {
             optionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -318,5 +309,7 @@ public class AddQuestion extends MenuActivity {
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

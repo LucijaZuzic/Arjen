@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arjen.R;
 import com.example.arjen.activities.PlayStory;
-import com.example.arjen.activities.QuizList;
-import com.example.arjen.utility.Database;
 import com.example.arjen.utility.myTTS;
 
 import java.util.List;
@@ -53,11 +51,9 @@ public class CustomAdapterPlayStoryQuestion extends RecyclerView.Adapter<CustomA
         questionText = viewHolder.getQuestionText();
         playQuestionText = viewHolder.getPlayQuestionText();
 
-        questionNumber.setText(Integer.toString(position + 1) + ". " + playStory.getString(R.string.question_substring));
+        questionNumber.setText((position + 1) + ". " + playStory.getString(R.string.question_substring));
         questionText.setText(questions.get(position));
-        playQuestionText.setOnClickListener(v -> {
-            myTTS.speak(questions.get(position), TextToSpeech.QUEUE_FLUSH);
-        });
+        playQuestionText.setOnClickListener(v -> myTTS.speak(questions.get(position), TextToSpeech.QUEUE_FLUSH));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -1,17 +1,15 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.R;
 import com.example.arjen.adapters.CustomAdapterPlayStoryQuestion;
@@ -20,15 +18,15 @@ import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.myTTS;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayStory extends MenuActivity {
     private Database.Stories.Story story;
-    private TextView title, storyText, noResults;
+    private TextView title;
+    private TextView storyText;
     private ImageButton playTitle, playStoryText, navigate, back, addStory, storyList, deleteStory, newStory;
-    private List<String> questions = new ArrayList<String>();
-    private CustomAdapterPlayStoryQuestion customAdapterPlayStoryQuestion;
+    private List<String> questions = new ArrayList<>();
     private RecyclerView questionRecyclerView;
     private int page = 1;
     private LinearLayout storyData, questionData;
@@ -64,8 +62,8 @@ public class PlayStory extends MenuActivity {
     public void registerListeners() {
         newStory.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddStory.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
         navigate.setOnClickListener(v -> {
@@ -73,39 +71,35 @@ public class PlayStory extends MenuActivity {
                 page = 2;
                 storyData.setVisibility(View.GONE);
                 questionData.setVisibility(View.VISIBLE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_back_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_back_24));
             } else {
                 page = 1;
                 storyData.setVisibility(View.VISIBLE);
                 questionData.setVisibility(View.GONE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_forward_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
         back.setOnClickListener(v -> {
             if (story != null) {
-                id = story.id;
+                MenuActivity.id = story.id;
             }
-            quizId = null;
+            MenuActivity.quizId = null;
             onBackPressed();
         });
         addStory.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddStory.class);
             if (story != null) {
-                id = story.id;
+                MenuActivity.id = story.id;
             }
-            quizId = null;
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
-        playTitle.setOnClickListener(v -> {
-            myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        playStoryText.setOnClickListener(v -> {
-            myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
+        playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playStoryText.setOnClickListener(v -> myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         storyList.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
         deleteStory.setOnClickListener(v -> {
@@ -118,7 +112,7 @@ public class PlayStory extends MenuActivity {
 
     @Override
     public void fillData() {
-        if (id != null) {
+        if (MenuActivity.id != null) {
             story = Database.Stories.findId(id);
             addStory.setVisibility(View.VISIBLE);
             deleteStory.setVisibility(View.VISIBLE);
@@ -128,23 +122,23 @@ public class PlayStory extends MenuActivity {
                 questions = story.questions;
             } else {
                 Intent intent = new Intent(getApplicationContext(), StoryList.class);
-                id = null;
-                quizId = null;
+                MenuActivity.id = null;
+                MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
             }
         } else {
             Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            id = null;
-            quizId = null;
+            MenuActivity.id = null;
+            MenuActivity.quizId = null;
             finish();
             startActivity(intent);
         }
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        customAdapterPlayStoryQuestion = new CustomAdapterPlayStoryQuestion(questions, this);
+        CustomAdapterPlayStoryQuestion customAdapterPlayStoryQuestion = new CustomAdapterPlayStoryQuestion(questions, this);
         questionRecyclerView.setAdapter(customAdapterPlayStoryQuestion);
-        noResults = findViewById(R.id.noResults);
-        if (questionRecyclerView.getAdapter().getItemCount() == 0) {
+        TextView noResults = findViewById(R.id.noResults);
+        if (Objects.requireNonNull(questionRecyclerView.getAdapter()).getItemCount() == 0) {
             questionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -169,5 +163,7 @@ public class PlayStory extends MenuActivity {
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

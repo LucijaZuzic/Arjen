@@ -54,15 +54,9 @@ public class CustomAdapterQuizList extends RecyclerView.Adapter<CustomAdapterQui
 
         title.setText(quiz.title);
         subject.setText(quiz.subject);
-        playQuizTitle.setOnClickListener(v -> {
-            myTTS.speak(quiz.title + " " + quiz.subject, TextToSpeech.QUEUE_FLUSH);
-        });
-        playQuiz.setOnClickListener(v -> {
-            quizList.playQuiz(quiz.id);
-        });
-        editQuiz.setOnClickListener(v -> {
-            quizList.editQuiz(quiz.id);
-        });
+        playQuizTitle.setOnClickListener(v -> myTTS.speak(quiz.title + " " + quiz.subject, TextToSpeech.QUEUE_FLUSH));
+        playQuiz.setOnClickListener(v -> quizList.playQuiz(quiz.id));
+        editQuiz.setOnClickListener(v -> quizList.editQuiz(quiz.id));
         deleteQuiz.setOnClickListener(v -> {
             quiz.delete();
             quizList.deleteQuiz(position);

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arjen.R;
-import com.example.arjen.activities.AddQuestion;
 import com.example.arjen.activities.AddQuiz;
 import com.example.arjen.utility.Database;
 import com.example.arjen.utility.interfaces.QuizInterface;
@@ -55,19 +54,13 @@ public class CustomAdapterQuizQuestionList extends RecyclerView.Adapter<CustomAd
         Database.Questions.Question question = Database.Questions.questionList.get(position);
 
         questionText.setText(question.questionText);
-        playQuestionText.setOnClickListener(v -> {
-            myTTS.speak(question.questionText, TextToSpeech.QUEUE_FLUSH);
-        });
+        playQuestionText.setOnClickListener(v -> myTTS.speak(question.questionText, TextToSpeech.QUEUE_FLUSH));
         if (addQuiz instanceof AddQuiz) {
             deleteQuestion.setVisibility(View.VISIBLE);
             editQuestion.setVisibility(View.VISIBLE);
         }
-        playQuestion.setOnClickListener(v -> {
-            addQuiz.playQuestion(question.id);
-        });
-        editQuestion.setOnClickListener(v -> {
-            addQuiz.editQuestion(question.id);
-        });
+        playQuestion.setOnClickListener(v -> addQuiz.playQuestion(question.id));
+        editQuestion.setOnClickListener(v -> addQuiz.editQuestion(question.id));
         deleteQuestion.setOnClickListener(v -> {
             question.delete();
             addQuiz.deleteQuestion(position);

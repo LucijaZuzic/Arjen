@@ -1,18 +1,16 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.utility.Database;
 import com.example.arjen.R;
@@ -21,16 +19,16 @@ import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.myTTS;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class AddStory extends MenuActivity {
     private ImageButton addStory, resetStory, navigate, playStory, deleteStory, playTitle, playStoryText, playQuestion, addQuestion, updateQuestion, resetQuestion, storyList, newStory;
     private LinearLayout storyData, questionData;
     private EditText title, storyText, questionText;
     private TextView modeText, noResults;
-    private List<String> questions = new ArrayList<String>();
+    private List<String> questions = new ArrayList<>();
     private CustomAdapterStoryQuestion customAdapterStoryQuestion;
     private RecyclerView questionRecyclerView;
     private Database.Stories.Story story;
@@ -103,12 +101,12 @@ public class AddStory extends MenuActivity {
                 page = 2;
                 storyData.setVisibility(View.GONE);
                 questionData.setVisibility(View.VISIBLE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_back_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_back_24));
             } else {
                 page = 1;
                 storyData.setVisibility(View.VISIBLE);
                 questionData.setVisibility(View.GONE);
-                navigate.setImageDrawable(getDrawable(R.drawable.ic_baseline_arrow_forward_24));
+                navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
         playStory.setOnClickListener(v -> {
@@ -127,18 +125,10 @@ public class AddStory extends MenuActivity {
             }
             onBackPressed();
         });
-        playTitle.setOnClickListener(v -> {
-            myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        playStoryText.setOnClickListener(v -> {
-            myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        playQuestion.setOnClickListener(v -> {
-            myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        addQuestion.setOnClickListener(v -> {
-            insertQuestion();
-        });
+        playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playStoryText.setOnClickListener(v -> myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        playQuestion.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        addQuestion.setOnClickListener(v -> insertQuestion());
         updateQuestion.setOnClickListener(v -> {
             questions.set(question_to_edit, questionText.getText().toString());
             customAdapterStoryQuestion.notifyItemChanged(question_to_edit);
@@ -185,7 +175,7 @@ public class AddStory extends MenuActivity {
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         customAdapterStoryQuestion = new CustomAdapterStoryQuestion(questions, this);
         questionRecyclerView.setAdapter(customAdapterStoryQuestion);
-        if (questionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(questionRecyclerView.getAdapter()).getItemCount() == 0) {
             questionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -218,7 +208,7 @@ public class AddStory extends MenuActivity {
             questions.remove(position);
             customAdapterStoryQuestion.notifyItemRemoved(position);
             customAdapterStoryQuestion.notifyItemRangeChanged(position, questions.size() - position);
-            if (questionRecyclerView.getAdapter().getItemCount() == 0) {
+            if (Objects.requireNonNull(questionRecyclerView.getAdapter()).getItemCount() == 0) {
                 questionRecyclerView.setVisibility(View.GONE);
                 noResults.setVisibility(View.VISIBLE);
             } else {
@@ -233,7 +223,7 @@ public class AddStory extends MenuActivity {
         questions.add(questionText.getText().toString());
         customAdapterStoryQuestion.notifyItemInserted(questions.size() - 1);
         questionRecyclerView.scrollToPosition(questions.size() - 1);
-        if (questionRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(questionRecyclerView.getAdapter()).getItemCount() == 0) {
             questionRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -258,5 +248,7 @@ public class AddStory extends MenuActivity {
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 }

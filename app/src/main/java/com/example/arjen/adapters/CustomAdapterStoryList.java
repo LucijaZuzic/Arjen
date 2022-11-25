@@ -53,15 +53,9 @@ public class CustomAdapterStoryList extends RecyclerView.Adapter<CustomAdapterSt
         Database.Stories.Story story = Database.Stories.storyList.get(position);
 
         storyTitle.setText(story.title);
-        playTitle.setOnClickListener(v -> {
-            myTTS.speak(story.title, TextToSpeech.QUEUE_FLUSH);
-        });
-        playStory.setOnClickListener(v -> {
-            storyList.playStory(story.id);
-        });
-        editStory.setOnClickListener(v -> {
-            storyList.editStory(story.id);
-        });
+        playTitle.setOnClickListener(v -> myTTS.speak(story.title, TextToSpeech.QUEUE_FLUSH));
+        playStory.setOnClickListener(v -> storyList.playStory(story.id));
+        editStory.setOnClickListener(v -> storyList.editStory(story.id));
         deleteStory.setOnClickListener(v -> {
             story.delete();
             storyList.deleteStory(position);

@@ -24,4 +24,25 @@
         android:layout_height="wrap_content"
         android:text="@string/quizes" />
 
+    <Button
+        android:id="@+id/numbersSound"
+        android:textSize="21sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/numbers_sound" />
+
+    <Button
+        android:id="@+id/numbersWords"
+        android:textSize="21sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/numbers_words" />
+
+    <Button
+        android:id="@+id/numbersWordsSound"
+        android:textSize="21sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/numbers_words_sound" />
+
 </LinearLayout>

@@ -56,17 +56,11 @@ public class CustomAdapterStoryQuestion extends RecyclerView.Adapter<CustomAdapt
         deleteQuestion = viewHolder.getDeleteQuestion();
         moveUp = viewHolder.getMoveUp();
         moveDown = viewHolder.getMoveDown();
-        questionNumber.setText(Integer.toString(position + 1) + ". " + addStory.getString(R.string.question_substring));
+        questionNumber.setText((position + 1) + ". " + addStory.getString(R.string.question_substring));
         question.setText(questions.get(position));
-        playQuestion.setOnClickListener(v -> {
-            myTTS.speak(question.getText().toString(), TextToSpeech.QUEUE_FLUSH);
-        });
-        editQuestion.setOnClickListener(v -> {
-            addStory.editQuestion(position);
-        });
-        deleteQuestion.setOnClickListener(v -> {
-            addStory.removeQuestion(position);
-        });
+        playQuestion.setOnClickListener(v -> myTTS.speak(question.getText().toString(), TextToSpeech.QUEUE_FLUSH));
+        editQuestion.setOnClickListener(v -> addStory.editQuestion(position));
+        deleteQuestion.setOnClickListener(v -> addStory.removeQuestion(position));
         moveDown.setEnabled(position != questions.size() - 1);
         moveDown.setOnClickListener(v -> {
             if (position != questions.size() - 1) {

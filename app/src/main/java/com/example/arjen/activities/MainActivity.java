@@ -1,9 +1,6 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.arjen.R;
@@ -13,7 +10,7 @@ import com.example.arjen.utility.myTTS;
 import java.util.Arrays;
 
 public class MainActivity extends MenuActivity {
-    private Button storyList, quizList;
+    private Button storyList, quizList, numbersSound, numbersWords, numbersWordsSound;
 
     @Override
     public int getLayout() {
@@ -24,6 +21,9 @@ public class MainActivity extends MenuActivity {
     public void findViews() {
         storyList = findViewById(R.id.storyList);
         quizList = findViewById(R.id.quizList);
+        numbersWords = findViewById(R.id.numbersWords);
+        numbersSound = findViewById(R.id.numbersSound);
+        numbersWordsSound = findViewById(R.id.numbersWordsSound);
     }
 
     @Override
@@ -36,6 +36,26 @@ public class MainActivity extends MenuActivity {
         });
         quizList.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
+            id = null;
+            quizId = null;
+            startActivity(intent);
+        });
+        numbersSound.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), Numbers.class);
+            id = null;
+            quizId = null;
+            intent.putExtra("words", 0);
+            startActivity(intent);
+        });
+        numbersWords.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), Numbers.class);
+            id = null;
+            quizId = null;
+            intent.putExtra("words", 1);
+            startActivity(intent);
+        });
+        numbersWordsSound.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), Numbers.class);
             id = null;
             quizId = null;
             startActivity(intent);
@@ -54,7 +74,17 @@ public class MainActivity extends MenuActivity {
         if (currentSentence == 0) {
             intent = new Intent(getApplicationContext(), StoryList.class);
         } else {
-            intent = new Intent(getApplicationContext(), QuizList.class);
+            if (currentSentence == 1) {
+                intent = new Intent(getApplicationContext(), QuizList.class);
+            } else {
+                intent = new Intent(getApplicationContext(), Numbers.class);
+                if (currentSentence == 2) {
+                    intent.putExtra("words", 0);
+                }
+                if (currentSentence == 3) {
+                    intent.putExtra("words", 1);
+                }
+            }
         }
         id = null;
         quizId = null;
@@ -64,8 +94,15 @@ public class MainActivity extends MenuActivity {
     @Override
     public void setupTTS() {
         textToSpeak.clear();
-        textToSpeak.addAll(Arrays.asList(getResources().getString(R.string.stories), getResources().getString(R.string.quizes)));
+        textToSpeak.addAll(Arrays.asList(
+                getResources().getString(R.string.stories),
+                getResources().getString(R.string.quizes),
+                getResources().getString(R.string.numbers_sound),
+                getResources().getString(R.string.numbers_words),
+                getResources().getString(R.string.numbers_words_sound)));
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 
     @Override

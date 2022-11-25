@@ -1,29 +1,25 @@
 package com.example.arjen.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.arjen.utility.Database;
 import com.example.arjen.R;
 import com.example.arjen.adapters.CustomAdapterQuizList;
 import com.example.arjen.utility.MenuActivity;
 import com.example.arjen.utility.interfaces.ShowListInterface;
-import com.example.arjen.utility.myTTS;
+
+import java.util.Objects;
 
 public class QuizList extends MenuActivity implements ShowListInterface {
     private ImageButton addQuiz, startSearch;
-    private CustomAdapterQuizList customAdapterQuizList;
     private RecyclerView quizesRecyclerView;
     private EditText searchQuiz;
     private CheckBox checkBoxTitle, checkBoxSubject;
@@ -47,12 +43,8 @@ public class QuizList extends MenuActivity implements ShowListInterface {
 
     @Override
     public void registerListeners() {
-        checkBoxTitle.setOnCheckedChangeListener((v1, v2) -> {
-            checkBoxSubject.setChecked(!checkBoxTitle.isChecked());
-        });
-        checkBoxSubject.setOnCheckedChangeListener((v1, v2) -> {
-            checkBoxTitle.setChecked(!checkBoxSubject.isChecked());
-        });
+        checkBoxTitle.setOnCheckedChangeListener((v1, v2) -> checkBoxSubject.setChecked(!checkBoxTitle.isChecked()));
+        checkBoxSubject.setOnCheckedChangeListener((v1, v2) -> checkBoxTitle.setChecked(!checkBoxSubject.isChecked()));
         startSearch.setOnClickListener(v -> {
             if (checkBoxTitle.isChecked()) {
                 Database.Quizes.getWithTitle(searchQuiz.getText().toString(), this);
@@ -75,9 +67,9 @@ public class QuizList extends MenuActivity implements ShowListInterface {
     }
 
     public void showList() {
-        customAdapterQuizList = new CustomAdapterQuizList(this);
+        CustomAdapterQuizList customAdapterQuizList = new CustomAdapterQuizList(this);
         quizesRecyclerView.setAdapter(customAdapterQuizList);
-        if (quizesRecyclerView.getAdapter().getItemCount() == 0) {
+        if (Objects.requireNonNull(quizesRecyclerView.getAdapter()).getItemCount() == 0) {
             quizesRecyclerView.setVisibility(View.GONE);
             noResults.setVisibility(View.VISIBLE);
         } else {
@@ -94,20 +86,20 @@ public class QuizList extends MenuActivity implements ShowListInterface {
 
     public void playQuiz(String id) {
         Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-        this.id = id;
+        MenuActivity.id = id;
         quizId = null;
         startActivity(intent);
     }
 
     public void editQuiz(String id) {
         Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-        this.id = id;
+        MenuActivity.id = id;
         quizId = null;
         startActivity(intent);
     }
 
     public void deleteQuiz(int position) {
-        quizesRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(quizesRecyclerView.getAdapter()).notifyItemRemoved(position);
         quizesRecyclerView.getAdapter().notifyItemRangeChanged(position, Database.Quizes.quizList.size() - position);
         setupTTS();
     }
@@ -124,6 +116,8 @@ public class QuizList extends MenuActivity implements ShowListInterface {
             textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + quiz.title + "." + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + quiz.subject);
         }
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 
     @Override

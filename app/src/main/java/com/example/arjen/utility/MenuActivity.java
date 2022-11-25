@@ -61,8 +61,6 @@ public abstract class MenuActivity extends AppCompatActivity {
         myTTS.stop();
         fillData();
         setupTTS();
-        currentSentence = 0;
-        numClick = 0;
         menuStartStopSetup();
         menuPlayModeSetup();
     }

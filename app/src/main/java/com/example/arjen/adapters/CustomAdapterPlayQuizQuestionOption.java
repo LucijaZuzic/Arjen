@@ -52,16 +52,14 @@ public class CustomAdapterPlayQuizQuestionOption extends RecyclerView.Adapter<Cu
         optionText = viewHolder.getOptionText();
         playOptionText = viewHolder.getPlayOptionText();
 
-        optionNumber.setText(Integer.toString(position + 1) + ". " + playQuestion.getString(R.string.option_substring));
+        optionNumber.setText((position + 1) + ". " + playQuestion.getString(R.string.option_substring));
         optionText.setText(options.get(position));
         if (playQuestion.getAnswer() == position) {
             optionText.setTypeface(null, Typeface.BOLD);
         } else {
             optionText.setTypeface(null, Typeface.NORMAL);
         }
-        playOptionText.setOnClickListener(v -> {
-            myTTS.speak(options.get(position), TextToSpeech.QUEUE_FLUSH);
-        });
+        playOptionText.setOnClickListener(v -> myTTS.speak(options.get(position), TextToSpeech.QUEUE_FLUSH));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
