@@ -19,6 +19,13 @@
         android:theme="@style/Theme.Arjen"
         tools:targetApi="31">
         <activity
+            android:name=".activities.QuestionList"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activities.Numbers"
             android:exported="false">
             <meta-data

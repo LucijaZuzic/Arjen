@@ -25,6 +25,13 @@
         android:text="@string/quizes" />
 
     <Button
+        android:id="@+id/questionList"
+        android:textSize="21sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/questions" />
+
+    <Button
         android:id="@+id/numbersSound"
         android:textSize="21sp"
         android:layout_width="wrap_content"

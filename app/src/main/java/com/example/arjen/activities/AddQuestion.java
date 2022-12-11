@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class AddQuestion extends MenuActivity {
-    private ImageButton playTitle, playSubject, addQuestion, resetQuestion, navigate, playQuestion, deleteQuestion, playQuestionText, playOption, addOption, updateOption, resetOption, newQuestion;
+    private ImageButton questionList, playTitle, playSubject, addQuestion, resetQuestion, navigate, playQuestion, deleteQuestion, playQuestionText, playOption, addOption, updateOption, resetOption, newQuestion;
     private LinearLayout quizData, questionData, optionData;
     private EditText questionText, optionText;
     private TextView title, subject, modeText, noResults;
@@ -65,6 +65,7 @@ public class AddQuestion extends MenuActivity {
         noResults = findViewById(R.id.noResults);
         optionRecyclerView = findViewById(R.id.optionRecyclerView);
         newQuestion = findViewById(R.id.newQuestion);
+        questionList = findViewById(R.id.questionList);
     }
 
     public void markAsAnswer(int position) {
@@ -204,8 +205,8 @@ public class AddQuestion extends MenuActivity {
             if (question != null) {
                 Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
                 if (question != null) {
-                    id = question.id;
-                    quizId = question.quizId;
+                    MenuActivity.id = question.id;
+                    MenuActivity.quizId = question.quizId;
                 }
                 startActivity(intent);
             }
@@ -240,10 +241,18 @@ public class AddQuestion extends MenuActivity {
         });
         newQuestion.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            id = null;
+            MenuActivity.id = null;
             if (question != null) {
-                quizId = question.quizId;
+                MenuActivity.quizId = question.quizId;
             }
+            startActivity(intent);
+        });
+        questionList.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
+            if (question != null) {
+                MenuActivity.id = question.quizId;
+            }
+            MenuActivity.quizId = null;
             startActivity(intent);
         });
     }
@@ -306,7 +315,7 @@ public class AddQuestion extends MenuActivity {
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
         textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString());
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
+            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
         }
         readyToPlay = true;
         currentSentence = 0;

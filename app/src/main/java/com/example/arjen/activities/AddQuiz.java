@@ -174,7 +174,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
         Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
         MenuActivity.id = id;
         if (quiz != null) {
-            quizId = quiz.id;
+            MenuActivity.quizId = quiz.id;
         }
         startActivity(intent);
     }
@@ -183,7 +183,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
         Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
         MenuActivity.id = id;
         if (quiz != null) {
-            quizId = quiz.id;
+            MenuActivity.quizId = quiz.id;
         }
         startActivity(intent);
     }
@@ -205,7 +205,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     public void setupTTS() {
         textToSpeak.clear();
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
-        textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString());
+        textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString() + ".");
         for (int i = 0; i < Database.Questions.questionList.size(); i++) {
             textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
         }

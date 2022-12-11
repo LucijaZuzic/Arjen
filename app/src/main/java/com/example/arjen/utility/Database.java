@@ -5,6 +5,7 @@ import static com.example.arjen.utility.Database.Questions.questionList;
 import androidx.annotation.Nullable;
 
 import com.example.arjen.utility.interfaces.ShowListInterface;
+import com.example.arjen.utility.interfaces.ShowListSecondPartInterface;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -65,6 +66,59 @@ public class Database {
                                             data.get("quizId").toString(),
                                             Integer.parseInt(data.get("answer").toString()),
                                             (List<String>) data.get("options")));
+                                }
+                            }
+                        }
+                        addQuiz.showList();
+                    });
+        }
+
+        public static void getForQuizes(ShowListSecondPartInterface addQuiz) {
+            questionList = new ArrayList<Question>();
+            if (Quizes.quizList.size() != 0) {
+                List<String> idList = new ArrayList<>();
+                for (Quizes.Quiz quiz: Quizes.quizList) {
+                    idList.add(quiz.id);
+                }
+                db.collection("questions")
+                        .whereIn("quizId", idList)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().size() > 0) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Map<String, Object> data = document.getData();
+                                        questionList.add(new Question(document.getId(),
+                                                data.get("questionText").toString(),
+                                                data.get("quizId").toString(),
+                                                Integer.parseInt(data.get("answer").toString()),
+                                                (List<String>) data.get("options")));
+                                    }
+                                }
+                            }
+                            addQuiz.showListSecondPart();
+                        });
+            } else {
+                addQuiz.showListSecondPart();
+            }
+        }
+
+        public static void getWithText(String text, ShowListInterface addQuiz) {
+            questionList = new ArrayList<Question>();
+            db.collection("questions")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Map<String, Object> data = document.getData();
+                                    if (data.get("questionText").toString().toLowerCase().contains(text.toLowerCase(Locale.ROOT))) {
+                                        questionList.add(new Question(document.getId(),
+                                                data.get("questionText").toString(),
+                                                data.get("quizId").toString(),
+                                                Integer.parseInt(data.get("answer").toString()),
+                                                (List<String>) data.get("options")));
+                                    }
                                 }
                             }
                         }

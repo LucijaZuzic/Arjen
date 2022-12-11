@@ -56,8 +56,8 @@ public class Numbers extends MenuActivity {
         } else {
             words = randomNew.nextInt(2);
         }
-        numberTextView.setText(R.string.number_to_guess + ": " + numberToGuess);
-        numberTextView.setText(R.string.number_input + ": 0");
+        numberTextView.setText(getResources().getString(R.string.number_to_guess) + ": " + numberToGuess);
+        numberCurrentTextView.setText(getResources().getString(R.string.number_input) + ": 0");
         if (words == 1) {
             modeTextView.setText(getResources().getString(R.string.numbers_words));
             myTTS.speak(numberToGuess.toString(), TextToSpeech.QUEUE_FLUSH);
@@ -81,7 +81,7 @@ public class Numbers extends MenuActivity {
             return;
         }
         currentNumber++;
-        numberCurrentTextView.setText(R.string.number_input + ": " + currentNumber);
+        numberCurrentTextView.setText(getResources().getString(R.string.number_input) + ": " + currentNumber);
         myTTS.speak(currentNumber.toString(), TextToSpeech.QUEUE_FLUSH);
     }
 

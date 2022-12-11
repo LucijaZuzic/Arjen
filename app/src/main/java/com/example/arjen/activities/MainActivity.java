@@ -10,7 +10,7 @@ import com.example.arjen.utility.myTTS;
 import java.util.Arrays;
 
 public class MainActivity extends MenuActivity {
-    private Button storyList, quizList, numbersSound, numbersWords, numbersWordsSound;
+    private Button storyList, quizList, questionList, numbersSound, numbersWords, numbersWordsSound;
 
     @Override
     public int getLayout() {
@@ -21,6 +21,7 @@ public class MainActivity extends MenuActivity {
     public void findViews() {
         storyList = findViewById(R.id.storyList);
         quizList = findViewById(R.id.quizList);
+        questionList = findViewById(R.id.questionList);
         numbersWords = findViewById(R.id.numbersWords);
         numbersSound = findViewById(R.id.numbersSound);
         numbersWordsSound = findViewById(R.id.numbersWordsSound);
@@ -36,6 +37,12 @@ public class MainActivity extends MenuActivity {
         });
         quizList.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
+            id = null;
+            quizId = null;
+            startActivity(intent);
+        });
+        questionList.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), QuestionList.class);
             id = null;
             quizId = null;
             startActivity(intent);
@@ -77,12 +84,16 @@ public class MainActivity extends MenuActivity {
             if (currentSentence == 1) {
                 intent = new Intent(getApplicationContext(), QuizList.class);
             } else {
-                intent = new Intent(getApplicationContext(), Numbers.class);
                 if (currentSentence == 2) {
-                    intent.putExtra("words", 0);
-                }
-                if (currentSentence == 3) {
-                    intent.putExtra("words", 1);
+                    intent = new Intent(getApplicationContext(), QuestionList.class);
+                } else {
+                    intent = new Intent(getApplicationContext(), Numbers.class);
+                    if (currentSentence == 3) {
+                        intent.putExtra("words", 0);
+                    }
+                    if (currentSentence == 4) {
+                        intent.putExtra("words", 1);
+                    }
                 }
             }
         }
@@ -97,6 +108,7 @@ public class MainActivity extends MenuActivity {
         textToSpeak.addAll(Arrays.asList(
                 getResources().getString(R.string.stories),
                 getResources().getString(R.string.quizes),
+                getResources().getString(R.string.questions),
                 getResources().getString(R.string.numbers_sound),
                 getResources().getString(R.string.numbers_words),
                 getResources().getString(R.string.numbers_words_sound)));

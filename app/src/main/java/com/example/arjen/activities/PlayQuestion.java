@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PlayQuestion extends MenuActivity {
-    private ImageButton playTitle, playSubject, navigate, back, playQuestionText, addQuestion, newQuestion, deleteQuestion;
+    private ImageButton playTitle, playSubject, navigate, back, playQuestionText, addQuestion, newQuestion, deleteQuestion, questionList;
     private LinearLayout quizData, questionData, optionData;
     private List<String> options = new ArrayList<>();
     private RecyclerView optionRecyclerView;
@@ -53,6 +53,7 @@ public class PlayQuestion extends MenuActivity {
         optionRecyclerView = findViewById(R.id.optionRecyclerView);
         newQuestion = findViewById(R.id.newQuestion);
         deleteQuestion = findViewById(R.id.deleteQuestion);
+        questionList = findViewById(R.id.questionList);
     }
 
     @Override
@@ -103,6 +104,14 @@ public class PlayQuestion extends MenuActivity {
             }
             onBackPressed();
         });
+        questionList.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
+            if (question != null) {
+                MenuActivity.id = question.quizId;
+            }
+            MenuActivity.quizId = null;
+            startActivity(intent);
+        });
     }
 
     public int getAnswer() {
@@ -147,7 +156,7 @@ public class PlayQuestion extends MenuActivity {
                 }
             } else {
                 Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                MenuActivity.id = quiz.id;
+                MenuActivity.id = MenuActivity.quizId;
                 MenuActivity.quizId = null;
                 finish();
                 startActivity(intent);
@@ -184,9 +193,9 @@ public class PlayQuestion extends MenuActivity {
         textToSpeak.clear();
         textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " +  questionText.getText().toString());
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
-        textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString());
+        textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString() + ".");
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
+            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
         }
         readyToPlay = true;
         currentSentence = 0;

@@ -54,4 +54,6 @@
     <string name="numbers_words_sound">Brojevi riječima ili zvukom</string>
     <string name="number_to_guess">Zadani broj</string>
     <string name="number_input">Uneseni broj</string>
+    <string name="no_questions">Nema pitanja</string>
+    <string name="unknown">nepoznat</string>
 </resources>

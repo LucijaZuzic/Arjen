@@ -55,6 +55,8 @@ public class StoryList extends MenuActivity implements ShowListInterface {
 
     @Override
     public void fillData() {
+        storiesRecyclerView.setVisibility(View.GONE);
+        noResults.setVisibility(View.VISIBLE);
         Database.Stories.get(this);
         storiesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
