@@ -107,7 +107,7 @@ public class QuestionList extends MenuActivity implements ShowListInterface, Sho
 
     @Override
     public void chooseOption() {
-        playQuestion(Database.Questions.questionList.get((currentSentence - currentSentence % 3) / 3).id);
+        playQuestion(Database.Questions.questionList.get(currentSentence).id);
     }
 
     @Override
@@ -123,13 +123,10 @@ public class QuestionList extends MenuActivity implements ShowListInterface, Sho
                 }
             }
             if (parent != null) {
-                textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + parent.title + ".");
-                textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + parent.subject + ".");
+                textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + question.questionText + ". " + getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + parent.title + ". " + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + parent.subject + "." );
             } else {
-                textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + getResources().getString(R.string.unknown) + ".");
-                textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + getResources().getString(R.string.unknown) + ".");
+                textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + question.questionText + ". " + getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + getResources().getString(R.string.unknown) + ". " + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + getResources().getString(R.string.unknown) + ".");
             }
-            textToSpeak.add((index) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + question.questionText + ".") ;
             index += 1;
         }
         readyToPlay = true;

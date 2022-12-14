@@ -78,11 +78,6 @@ public class QuizList extends MenuActivity implements ShowListInterface {
             quizesRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
-        textToSpeak.clear();
-        for (Database.Quizes.Quiz quiz: Database.Quizes.quizList) {
-            textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + quiz.title + "."
-                    + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + quiz.subject + ".");
-        }
         setupTTS();
     }
 
@@ -115,7 +110,7 @@ public class QuizList extends MenuActivity implements ShowListInterface {
     public void setupTTS() {
         textToSpeak.clear();
         for (Database.Quizes.Quiz quiz: Database.Quizes.quizList) {
-            textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + quiz.title + "." + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + quiz.subject + ".");
+            textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + quiz.title + ". " + getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + quiz.subject + ".");
         }
         readyToPlay = true;
         currentSentence = 0;

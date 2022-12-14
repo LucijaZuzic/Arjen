@@ -27,6 +27,7 @@ import com.example.arjen.activities.MainActivity;
 import com.example.arjen.activities.PlayQuestion;
 import com.example.arjen.activities.PlayQuiz;
 import com.example.arjen.activities.PlayStory;
+import com.example.arjen.activities.QuestionList;
 import com.example.arjen.activities.QuizList;
 import com.example.arjen.activities.StoryList;
 
@@ -89,6 +90,26 @@ public abstract class MenuActivity extends AppCompatActivity {
         }
         if (this.getClass().equals(StoryList.class)) {
             return getResources().getString(R.string.story_list);
+        }
+        if (this.getClass().equals(QuestionList.class)) {
+            return getResources().getString(R.string.question_list);
+        }
+        if (this.getClass().equals(Number.class)) {
+            int words = 2;
+            Intent intent = getIntent();
+            if (intent.hasExtra("words")) {
+                words = intent.getExtras().getInt("words");
+            }
+            if (words == 0) {
+                return getResources().getString(R.string.numbers_words);
+            }
+            if (words == 1) {
+                return getResources().getString(R.string.numbers_sound);
+            }
+            if (words == 2) {
+                return getResources().getString(R.string.numbers_words_sound);
+            }
+            return getResources().getString(R.string.numbers);
         }
         if (this.getClass().equals(MainActivity.class)) {
             return getResources().getString(R.string.main_activity);

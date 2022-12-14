@@ -56,4 +56,5 @@
     <string name="number_input">Uneseni broj</string>
     <string name="no_questions">Nema pitanja</string>
     <string name="unknown">nepoznat</string>
+    <string name="question_list">Popis pitanja</string>
 </resources>
