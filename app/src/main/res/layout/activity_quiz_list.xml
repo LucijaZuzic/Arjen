@@ -127,25 +127,14 @@
         android:layout_height="wrap_content"
         android:text="@string/no_quizes"/>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:scrollbars="vertical"
         android:scrollbarSize="50dip"
+        android:scrollbarThumbVertical="@color/black"
         android:fadeScrollbars="false"
+        android:id="@+id/quizesRecyclerView"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/quizesRecyclerView"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

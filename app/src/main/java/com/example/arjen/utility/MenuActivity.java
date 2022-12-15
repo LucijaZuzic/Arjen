@@ -128,24 +128,26 @@ public abstract class MenuActivity extends AppCompatActivity {
         registerListeners();
         if (previousScroll != null && recyclerView != null) {
             previousScroll.setOnClickListener(v -> {
-                //LinearLayoutManager myLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                //scrollPosition = myLayoutManager.findFirstVisibleItemPosition();
-                if (scrollPosition > 0) {
-                    scrollPosition--;
+                LinearLayoutManager myLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (myLayoutManager != null) {
+                    scrollPosition = myLayoutManager.findFirstVisibleItemPosition();
+                }
+                if (scrollPosition >= 1) {
+                    scrollPosition -= 1;
                 }
                 recyclerView.scrollToPosition(scrollPosition);
-                //Toast.makeText(this,  " " + scrollPosition, Toast.LENGTH_SHORT).show();
             });
         }
         if (nextScroll != null && recyclerView != null) {
-            //LinearLayoutManager myLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-            //scrollPosition = myLayoutManager.findLastVisibleItemPosition();
             nextScroll.setOnClickListener(v -> {
-                if (scrollPosition < recyclerView.getAdapter().getItemCount()) {
-                    scrollPosition++;
+                LinearLayoutManager myLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (myLayoutManager != null) {
+                    scrollPosition = myLayoutManager.findLastVisibleItemPosition();
+                }
+                if (scrollPosition < recyclerView.getAdapter().getItemCount() - 1) {
+                    scrollPosition += 1;
                 }
                 recyclerView.scrollToPosition(scrollPosition);
-                //Toast.makeText(this, " " + scrollPosition, Toast.LENGTH_SHORT).show();
             });
         }
         final ViewGroup viewGroup = this.findViewById(R.id.mainLayout);
