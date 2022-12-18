@@ -12,28 +12,62 @@
     <TextView
         android:gravity="center"
         android:id="@+id/modeTextView"
-        android:textSize="70sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/numbers" />
+        android:text="@string/numbers" />
+
+    <TextView
+        android:gravity="center"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/number_to_guess" />
 
     <TextView
         android:gravity="center"
         android:id="@+id/numberTextView"
-        android:textSize="70sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/number_to_guess" />
 
+    <LinearLayout
+        android:id="@+id/numberMarkers"
+        android:orientation="horizontal"
+        android:padding="50px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/number_input" />
+
     <TextView
         android:gravity="center"
         android:id="@+id/numberCurrentTextView"
-        android:textSize="70sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/number_input" />
+
+    <LinearLayout
+        android:id="@+id/currentNumberMarkers"
+        android:orientation="horizontal"
+        android:padding="50px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+    </LinearLayout>
 
 </LinearLayout>
