@@ -2,6 +2,7 @@ package com.example.arjen.utility;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.media.Image;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -12,9 +13,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.ContentView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +52,7 @@ public abstract class MenuActivity extends AppCompatActivity {
     public int scrollPosition = 0;
     public ImageButton previousScroll, nextScroll;
     public RecyclerView recyclerView;
+    private LinearLayout instructions;
 
     @Override
     protected void onStop() {
@@ -150,8 +155,40 @@ public abstract class MenuActivity extends AppCompatActivity {
                 recyclerView.scrollToPosition(scrollPosition);
             });
         }
+        instructions = this.findViewById(R.id.instructions);
         final ViewGroup viewGroup = this.findViewById(R.id.mainLayout);
         getAllChildren(viewGroup);
+
+        // ContentView is the root view of the layout of this activity/fragment
+        viewGroup.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        Rect r = new Rect();
+                        viewGroup.getWindowVisibleDisplayFrame(r);
+                        int screenHeight = viewGroup.getRootView().getHeight();
+
+                        // r.bottom is the position above soft keypad or device button.
+                        // if keypad is shown, the r.bottom is smaller than that before.
+                        int keypadHeight = screenHeight - r.bottom;
+
+                        if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                            // keyboard is opened
+                            if (!isKeyboardShowing) {
+                                isKeyboardShowing = true;
+                                onKeyboardVisibilityChanged(true);
+                            }
+                        }
+                        else {
+                            // keyboard is closed
+                            if (isKeyboardShowing) {
+                                isKeyboardShowing = false;
+                                onKeyboardVisibilityChanged(false);
+                            }
+                        }
+                    }
+                });
     }
 
     public void nextNumber() {
@@ -293,5 +330,15 @@ public abstract class MenuActivity extends AppCompatActivity {
             myTTS.speak(textToSpeak.get(currentSentence), TextToSpeech.QUEUE_FLUSH);
         }
         numClick++;
+    }
+
+    boolean isKeyboardShowing = false;
+    void onKeyboardVisibilityChanged(boolean opened) {
+        if (isKeyboardShowing) {
+            instructions.setVisibility(View.GONE);
+        } else {
+            instructions.setVisibility(View.VISIBLE);
+        }
+
     }
 }

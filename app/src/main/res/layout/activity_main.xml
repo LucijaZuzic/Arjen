@@ -1,55 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:gravity="center"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".activities.MainActivity">
 
-    <Button
-        android:id="@+id/storyList"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/stories" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/quizList"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/quizes" />
+        <Button
+            android:id="@+id/storyList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/stories"
+            android:textSize="21sp" />
 
-    <Button
-        android:id="@+id/questionList"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/questions" />
+        <Button
+            android:id="@+id/quizList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/quizes"
+            android:textSize="21sp" />
 
-    <Button
-        android:id="@+id/numbersSound"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/numbers_sound" />
+        <Button
+            android:id="@+id/questionList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/questions"
+            android:textSize="21sp" />
 
-    <Button
-        android:id="@+id/numbersWords"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/numbers_words" />
+        <Button
+            android:id="@+id/numbersSound"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/numbers_sound"
+            android:textSize="21sp" />
 
-    <Button
-        android:id="@+id/numbersWordsSound"
-        android:textSize="21sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/numbers_words_sound" />
+        <Button
+            android:id="@+id/numbersWords"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/numbers_words"
+            android:textSize="21sp" />
+
+        <Button
+            android:id="@+id/numbersWordsSound"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/numbers_words_sound"
+            android:textSize="21sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/instructions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/read_text"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/choose_option"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_left_24" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_right_24" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

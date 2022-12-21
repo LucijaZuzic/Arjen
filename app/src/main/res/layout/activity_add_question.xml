@@ -10,303 +10,378 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/addQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_check_24" />
-
-        <ImageButton
-            android:id="@+id/resetQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_close_24" />
-
-        <ImageButton
-            android:id="@+id/navigate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_arrow_forward_24" />
-
-        <ImageButton
-            android:id="@+id/playQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_play_arrow_24"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/deleteQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_delete_24"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/questionList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_menu_24" />
-
-        <ImageButton
-            android:id="@+id/newQuestion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/questionData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/input_question"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/playQuestionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:background="?android:attr/listDivider" />
-
-        <EditText
-            android:id="@+id/questionText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/input_question"
-            android:inputType="textMultiLine"
-            android:minWidth="48dp"
-            android:minHeight="48dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/quizData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/quiz_title"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/playTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/input_quiz_title"
-            android:inputType="textMultiLine"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:textSize="18sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/subject"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
             <ImageButton
-                android:id="@+id/playSubject"
+                android:id="@+id/addQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:id="@+id/subject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/input_subject"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:textSize="18sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/optionData"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/modeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/new_option"
-                android:textSize="21sp"
-                android:textStyle="bold" />
+                android:src="@drawable/ic_baseline_check_24" />
 
             <ImageButton
-                android:id="@+id/playOption"
+                android:id="@+id/resetQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24" />
+                android:src="@drawable/ic_baseline_close_24" />
 
             <ImageButton
-                android:id="@+id/addOption"
+                android:id="@+id/navigate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_arrow_forward_24" />
+
+            <ImageButton
+                android:id="@+id/playQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_play_arrow_24"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/deleteQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_delete_24"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/questionList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_menu_24" />
+
+            <ImageButton
+                android:id="@+id/newQuestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:src="@drawable/ic_baseline_add_24" />
 
-            <ImageButton
-                android:id="@+id/updateOption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_check_24"
-                android:visibility="gone" />
+        </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/resetOption"
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/questionData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/input_question"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playQuestionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_volume_up_24" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <EditText
+                android:id="@+id/questionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_question"
+                android:inputType="textMultiLine"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_close_24"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/quizData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz_title"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_volume_up_24" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_quiz_title"
+                android:inputType="textMultiLine"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subject"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playSubject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_volume_up_24" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/subject"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_subject"
+                android:inputType="textMultiLine"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/optionData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/modeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_option"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playOption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_volume_up_24" />
+
+                <ImageButton
+                    android:id="@+id/addOption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_add_24" />
+
+                <ImageButton
+                    android:id="@+id/updateOption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_check_24"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/resetOption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_close_24"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <EditText
+                android:id="@+id/optionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_option"
+                android:inputType="textMultiLine"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:textSize="21sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/options"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/nextScroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/previousScroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/noResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_options_for_question"
+                android:textSize="21sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/optionRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="50dip"
+                android:scrollbarThumbVertical="@drawable/ic_baseline_stop_24"
+                android:scrollbars="vertical"
                 android:visibility="gone" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/instructions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:background="?android:attr/listDivider" />
-
-        <EditText
-            android:id="@+id/optionText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/input_option"
-            android:inputType="textMultiLine"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:textSize="21sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/options"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/read_text"
                 android:textSize="21sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/nextScroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"/>
-
-            <ImageButton
-                android:id="@+id/previousScroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/check_answer"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -316,22 +391,24 @@
             android:layout_gravity="center"
             android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:id="@+id/noResults"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_options_for_question"
-            android:textSize="21sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:scrollbars="vertical"
-            android:scrollbarSize="50dip"
-            android:scrollbarThumbVertical="@color/black"
-            android:fadeScrollbars="false"
-            android:id="@+id/optionRecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_left_24" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_right_24" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -1,207 +1,280 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".activities.PlayStory">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_close_24"/>
-
-        <ImageButton
-            android:id="@+id/navigate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_arrow_forward_24"/>
-
-        <ImageButton
-            android:id="@+id/addStory"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_mode_24"/>
-
-        <ImageButton
-            android:id="@+id/deleteStory"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_delete_24"/>
-
-        <ImageButton
-            android:id="@+id/storyList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_menu_24"/>
-
-        <ImageButton
-            android:id="@+id/newStory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
-            android:src="@drawable/ic_baseline_add_24"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/storyData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/story_title" />
-
-            <ImageButton
-                android:id="@+id/playTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:background="?android:attr/listDivider" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:minWidth="48dp"
             android:minHeight="48dp"
-            android:hint="@string/input_story_title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:text="@string/story_text" />
-
             <ImageButton
-                android:id="@+id/playStoryText"
+                android:id="@+id/back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_volume_up_24"/>
+                android:src="@drawable/ic_baseline_close_24" />
+
+            <ImageButton
+                android:id="@+id/navigate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_arrow_forward_24" />
+
+            <ImageButton
+                android:id="@+id/addStory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_mode_24"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/deleteStory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_delete_24"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/storyList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_menu_24" />
+
+            <ImageButton
+                android:id="@+id/newStory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_add_24" />
 
         </LinearLayout>
 
-        <View
+        <LinearLayout
+            android:id="@+id/storyData"
             android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:background="?android:attr/listDivider" />
-
-        <ScrollView
-            android:scrollbarSize="50dip"
-            android:fadeScrollbars="false"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/storyText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:text="@string/story_title"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
-                    android:hint="@string/input_story_text"/>
+                    android:src="@drawable/ic_baseline_volume_up_24" />
 
             </LinearLayout>
 
-        </ScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/input_story_title"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/story_text"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/playStoryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_volume_up_24" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="50dip"
+                android:scrollbarThumbVertical="@drawable/ic_baseline_stop_24"
+                android:scrollbars="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/storyText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/input_story_text"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/questionData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/questions"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/nextScroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/previousScroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_up_24"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/noResults"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_questions_for_story"
+                android:textSize="21sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/questionRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="false"
+                android:scrollbarSize="50dip"
+                android:scrollbarThumbVertical="@drawable/ic_baseline_stop_24"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/questionData"
-        android:visibility="gone"
+        android:id="@+id/instructions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/read_text"
                 android:textSize="21sp"
-                android:textStyle="bold"
-                android:text="@string/questions" />
+                android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/nextScroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_down_24"/>
-
-            <ImageButton
-                android:id="@+id/previousScroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_up_24"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/read_text"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -211,21 +284,24 @@
             android:layout_gravity="center"
             android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:id="@+id/noResults"
-            android:textSize="21sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/no_questions_for_story"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:scrollbars="vertical"
-            android:scrollbarSize="50dip"
-            android:scrollbarThumbVertical="@color/black"
-            android:fadeScrollbars="false"
-            android:id="@+id/questionRecyclerView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_left_24" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_arrow_right_24" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.arjen.R;
 import com.example.arjen.activities.AddQuiz;
+import com.example.arjen.activities.QuestionList;
 import com.example.arjen.utility.Database;
 import com.example.arjen.utility.interfaces.QuizInterface;
 import com.example.arjen.utility.myTTS;
@@ -55,7 +56,7 @@ public class CustomAdapterQuizQuestionList extends RecyclerView.Adapter<CustomAd
 
         questionText.setText(question.questionText);
         playQuestionText.setOnClickListener(v -> myTTS.speak(question.questionText, TextToSpeech.QUEUE_FLUSH));
-        if (addQuiz instanceof AddQuiz) {
+        if (addQuiz instanceof AddQuiz || addQuiz instanceof QuestionList) {
             deleteQuestion.setVisibility(View.VISIBLE);
             editQuestion.setVisibility(View.VISIBLE);
         }
