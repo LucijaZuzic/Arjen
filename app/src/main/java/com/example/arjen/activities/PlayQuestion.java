@@ -5,11 +5,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.arjen.R;
 import com.example.arjen.adapters.CustomAdapterPlayQuizQuestionOption;
@@ -80,37 +82,36 @@ public class PlayQuestion extends MenuActivity {
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
-        back.setOnClickListener(v -> onBackPressed());
-        addQuestion.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(),AddQuestion.class);
+        back.setOnClickListener(v -> {
             if (question != null) {
-                MenuActivity.id = question.id;
-                MenuActivity.quizId = question.quizId;
+                onBackPressed();
             }
-            startActivity(intent);
+        });
+        addQuestion.setOnClickListener(v -> {
+            if (question != null) {
+                Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
+                startActivity(intent);
+            }
         });
         playQuestionText.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         newQuestion.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            MenuActivity.id = null;
             if (question != null) {
-                MenuActivity.quizId = question.quizId;
+                Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
+                id = null;
+                startActivity(intent);
             }
-            startActivity(intent);
         });
         deleteQuestion.setOnClickListener(v -> {
             if (question != null) {
-                question.delete();
+                question.startDelete(this);
             }
-            onBackPressed();
         });
         questionList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
             if (question != null) {
-                MenuActivity.id = question.quizId;
+                Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
+                id = quizId;
+                startActivity(intent);
             }
-            MenuActivity.quizId = null;
-            startActivity(intent);
         });
     }
 
@@ -120,10 +121,11 @@ public class PlayQuestion extends MenuActivity {
 
     @Override
     public void fillData() {
-        if (MenuActivity.quizId == null) {
+        question = null;
+        if (quizId == null) {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
+            id = null;
+            quizId = null;
             finish();
             startActivity(intent);
         } else {
@@ -133,31 +135,31 @@ public class PlayQuestion extends MenuActivity {
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                MenuActivity.id = null;
-                MenuActivity.quizId = null;
+                id = null;
+                quizId = null;
                 finish();
                 startActivity(intent);
             }
-            if (MenuActivity.id != null) {
-                question = Database.Questions.findId(MenuActivity.id);
+            if (id != null) {
+                question = Database.Questions.findId(id);
                 addQuestion.setVisibility(View.VISIBLE);
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    MenuActivity.quizId = question.quizId;
+                    id = question.id;
+                    quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
                     Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    MenuActivity.id = null;
-                    MenuActivity.quizId = null;
+                    id = null;
+                    quizId = null;
                     finish();
                     startActivity(intent);
                 }
             } else {
                 Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                MenuActivity.id = MenuActivity.quizId;
-                MenuActivity.quizId = null;
+                id = quizId;
                 finish();
                 startActivity(intent);
             }
@@ -172,19 +174,46 @@ public class PlayQuestion extends MenuActivity {
             optionRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
-        setupTTS();
     }
 
     @Override
     public void chooseOption() {
         if (currentSentence > 2) {
             if (currentSentence - 3 == answer) {
-                myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
+                if (myTTS.isPaused) {
+                    Toast.makeText(this, getResources().getString(R.string.correct), Toast.LENGTH_SHORT).show();
+                } else {
+                    myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
+                }
+                musicDing.stop();
+                musicDing = MediaPlayer.create(this, R.raw.success);
+                musicDing.start();
+                musicDing.setOnCompletionListener(v -> {
+                    if (question != null) {
+                        Database.Questions.findRandom(question, this);
+                    }
+                });
             } else {
-                myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
+                if (myTTS.isPaused) {
+                    Toast.makeText(this, getResources().getString(R.string.incorrect), Toast.LENGTH_SHORT).show();
+                } else {
+                    myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
+                }
+                musicDing.stop();
+                musicDing = MediaPlayer.create(this, R.raw.failure);
+                musicDing.start();
             }
         } else {
             playNext();
+        }
+    }
+
+    public void randomFound(Database.Questions.Question otherQuestion) {
+        if (otherQuestion != null) {
+            Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
+            id = otherQuestion.id;
+            quizId = otherQuestion.quizId;
+            startActivity(intent);
         }
     }
 
@@ -195,7 +224,7 @@ public class PlayQuestion extends MenuActivity {
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
         textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString() + ".");
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
+            textToSpeak.add(getResources().getString(R.string.option) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
         }
         readyToPlay = true;
         currentSentence = 0;

@@ -1,8 +1,10 @@
 package com.example.arjen.activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
@@ -18,17 +20,9 @@ import java.util.Random;
 public class Numbers extends MenuActivity {
     private TextView modeTextView, numberTextView, numberCurrentTextView;
     private Integer currentNumber = 0, numberToGuess = 0;
-    private MediaPlayer musicDing;
     private boolean answered = false;
     private LinearLayout numberMarkers, currentNumberMarkers;
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (musicDing != null && musicDing.isPlaying()) {
-            musicDing.stop();
-        }
-    }
+    private int words;
 
     @Override
     public int getLayout() {
@@ -57,7 +51,6 @@ public class Numbers extends MenuActivity {
         numberToGuess = randomNew.nextInt(5) + 1;
         setNumberMarkers();
         Intent intent = getIntent();
-        int words;
         if (intent.hasExtra("words")) {
             words = intent.getExtras().getInt("words");
         } else {
@@ -67,19 +60,29 @@ public class Numbers extends MenuActivity {
         numberCurrentTextView.setText("0");
         if (words == 1) {
             modeTextView.setText(getResources().getString(R.string.numbers_words));
-            myTTS.speak(numberToGuess.toString(), TextToSpeech.QUEUE_FLUSH);
         } else {
             modeTextView.setText(getResources().getString(R.string.numbers_sound));
-            musicDing = MediaPlayer.create(this, R.raw.on);
-            final int[] numberPlayed = {1};
-            musicDing.start();
-            musicDing.setOnCompletionListener(v -> {
-                if (numberPlayed[0] < numberToGuess) {
-                    musicDing.start();
-                }
-                numberPlayed[0]++;
-            });
         }
+        myTTS.speak(activityToText(), TextToSpeech.QUEUE_FLUSH);
+        Handler handler = new Handler();
+        Context me = this;
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                if (words == 1) {
+                    myTTS.speak(numberToGuess.toString(), TextToSpeech.QUEUE_FLUSH);
+                } else {
+                    musicDing = MediaPlayer.create(me, R.raw.on);
+                    final int[] numberPlayed = {1};
+                    musicDing.start();
+                    musicDing.setOnCompletionListener(v -> {
+                        if (numberPlayed[0] < numberToGuess) {
+                            musicDing.start();
+                        }
+                        numberPlayed[0]++;
+                    });
+                }
+            }
+        }, 2500);
     }
 
     @Override
@@ -110,7 +113,9 @@ public class Numbers extends MenuActivity {
             musicDing = MediaPlayer.create(this, R.raw.failure);
         }
         musicDing.start();
-        musicDing.setOnCompletionListener(v -> fillData());
+        musicDing.setOnCompletionListener(v -> {
+            fillData();
+        });
     }
 
     public void setNumberMarkers() {
@@ -142,8 +147,11 @@ public class Numbers extends MenuActivity {
 
     @Override
     public void setupTTS() {
+        textToSpeak.clear();
         textToSpeak.add(numberToGuess.toString());
         readyToPlay = true;
+        currentSentence = 0;
+        numClick = 0;
     }
 
     @Override

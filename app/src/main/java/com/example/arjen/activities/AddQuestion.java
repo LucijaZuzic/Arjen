@@ -1,10 +1,13 @@
 package com.example.arjen.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.EditText;
@@ -93,17 +96,55 @@ public class AddQuestion extends MenuActivity {
         setupTTS();
     }
 
-    public void editOption(int position) {
+    private DialogInterface.OnClickListener editDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyEditOption(somePosition);
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyEditOption(int position) {
         optionText.setText(options.get(position));
         option_to_edit = position;
         addOption.setVisibility(View.GONE);
         resetOption.setVisibility(View.VISIBLE);
         updateOption.setVisibility(View.VISIBLE);
-        modeText.setText(getString(R.string.editing) + " " + (position + 1) + ". " + getString(R.string.option_substring));
+        modeText.setText(getString(R.string.editing) + " " + (position + 1) + ". " + getString(R.string.option_substring_editing));
         setupTTS();
     }
 
-    public void removeOption(int position) {
+    public void editOption(int position) {
+        somePosition = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
+    }
+
+    private int somePosition;
+
+    private DialogInterface.OnClickListener removeDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyRemoveOption(somePosition);
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyRemoveOption(int position) {
         if (options.size() != 0) {
             options.remove(position);
             if (answer == position) {
@@ -122,12 +163,34 @@ public class AddQuestion extends MenuActivity {
         textToSpeak.clear();
         textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " +  questionText.getText().toString());
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
+            textToSpeak.add(getResources().getString(R.string.option) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
         }
         setupTTS();
     }
 
-    public void insertOption() {
+    public void removeOption(int position) {
+        somePosition = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.option_delete))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), removeDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), removeDialogClickListener).show();
+    }
+
+    private DialogInterface.OnClickListener insertDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyInsertOption();
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyInsertOption() {
         options.add(optionText.getText().toString());
         customAdapterQuizQuestionOption.notifyItemInserted(options.size() - 1);
         optionRecyclerView.scrollToPosition(options.size() - 1);
@@ -141,18 +204,39 @@ public class AddQuestion extends MenuActivity {
         textToSpeak.clear();
         textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " +  questionText.getText().toString());
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
+            textToSpeak.add(getResources().getString(R.string.option) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
         }
         setupTTS();
+    }
+
+    public void insertOption() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), insertDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), insertDialogClickListener).show();
     }
 
     @Override
     public void chooseOption() {
         if (currentSentence > 2) {
             if (currentSentence - 3 == answer) {
-                myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
+                if (myTTS.isPaused) {
+                    Toast.makeText(this, getResources().getString(R.string.correct), Toast.LENGTH_SHORT).show();
+                } else {
+                    myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
+                }
+                musicDing.stop();
+                musicDing = MediaPlayer.create(this, R.raw.success);
+                musicDing.start();
             } else {
-                myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
+                if (myTTS.isPaused) {
+                    Toast.makeText(this, getResources().getString(R.string.incorrect), Toast.LENGTH_SHORT).show();
+                } else {
+                    myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
+                }
+                musicDing.stop();
+                musicDing = MediaPlayer.create(this, R.raw.failure);
+                musicDing.start();
             }
         } else {
             playNext();
@@ -165,27 +249,44 @@ public class AddQuestion extends MenuActivity {
     }
 
     @Override
+    public void applyChanges() {
+        if (options.size() < 2) {
+            if (myTTS.isPaused) {
+                Toast.makeText(this, getResources().getString(R.string.no_options), Toast.LENGTH_SHORT).show();
+            } else {
+                myTTS.speak(getResources().getString(R.string.no_options), TextToSpeech.QUEUE_FLUSH);
+            }
+            return;
+        } else {
+            if (answer == -1) {
+                if (myTTS.isPaused) {
+                    Toast.makeText(this, getResources().getString(R.string.no_answer), Toast.LENGTH_SHORT).show();
+                } else {
+                    myTTS.speak(getResources().getString(R.string.no_answer), TextToSpeech.QUEUE_FLUSH);
+                }
+                return;
+            }
+        }
+        if (question != null) {
+            question.update(questionText.getText().toString(), quizId, answer, options);
+        } else {
+            Database.Questions.add(questionText.getText().toString(), quizId, answer, options);
+        }
+        instantBackPressed();
+    }
+
+    @Override
     public void registerListeners() {
         addQuestion.setOnClickListener(v -> {
-            if (options.size() < 2) {
-                Toast.makeText(this, getResources().getString(R.string.no_options), Toast.LENGTH_SHORT).show();
-                myTTS.speak(getResources().getString(R.string.no_options), TextToSpeech.QUEUE_FLUSH);
-                return;
-            } else {
-                if (answer == -1) {
-                    Toast.makeText(this, getResources().getString(R.string.no_answer), Toast.LENGTH_SHORT).show();
-                    myTTS.speak(getResources().getString(R.string.no_answer), TextToSpeech.QUEUE_FLUSH);
-                    return;
-                }
-            }
             if (question != null) {
-                question.update(questionText.getText().toString(), quizId, answer, options);
-            } else {
-                Database.Questions.add(questionText.getText().toString(), quizId, answer, options);
+                confirmBackPressed();
             }
-            onBackPressed();
         });
-        resetQuestion.setOnClickListener(v -> onBackPressed());
+        resetQuestion.setOnClickListener(v -> {
+            if (question != null) {
+                onBackPressed();
+            }
+        });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
                 page = 2;
@@ -203,19 +304,13 @@ public class AddQuestion extends MenuActivity {
         });
         playQuestion.setOnClickListener(v -> {
             if (question != null) {
-                Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-                if (question != null) {
-                    MenuActivity.id = question.id;
-                    MenuActivity.quizId = question.quizId;
-                }
-                startActivity(intent);
+                otherActivityBackPressed(PlayQuestion.class, question.quizId, question.id);
             }
         });
         deleteQuestion.setOnClickListener(v -> {
             if (question != null) {
-                question.delete();
+                question.startDelete(this);
             }
-            onBackPressed();
         });
         playQuestionText.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playOption.setOnClickListener(v -> myTTS.speak(optionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
@@ -240,29 +335,24 @@ public class AddQuestion extends MenuActivity {
             modeText.setText(getString(R.string.new_option));
         });
         newQuestion.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            MenuActivity.id = null;
             if (question != null) {
-                MenuActivity.quizId = question.quizId;
+                otherActivityBackPressed(AddQuestion.class, question.quizId, null);
             }
-            startActivity(intent);
         });
         questionList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
             if (question != null) {
-                MenuActivity.id = question.quizId;
+                otherActivityBackPressed(PlayQuiz.class, question.quizId, question.quizId);
             }
-            MenuActivity.quizId = null;
-            startActivity(intent);
         });
     }
 
     @Override
     public void fillData() {
-        if (MenuActivity.quizId == null) {
+        question = null;
+        if (quizId == null) {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
+            id = null;
+            quizId = null;
             finish();
             startActivity(intent);
         } else {
@@ -272,24 +362,25 @@ public class AddQuestion extends MenuActivity {
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                MenuActivity.id = null;
-                MenuActivity.quizId = null;
+                id = null;
+                quizId = null;
                 finish();
                 startActivity(intent);
             }
-            if (MenuActivity.id != null) {
-                question = Database.Questions.findId(MenuActivity.id);
+            if (id != null) {
+                question = Database.Questions.findId(id);
                 playQuestion.setVisibility(View.VISIBLE);
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    MenuActivity.quizId = question.quizId;
+                    id = question.quizId;
+                    quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
                     Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    MenuActivity.id = null;
-                    MenuActivity.quizId = null;
+                    id = null;
+                    quizId = null;
                     finish();
                     startActivity(intent);
                 }
@@ -305,7 +396,6 @@ public class AddQuestion extends MenuActivity {
             optionRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
-        setupTTS();
     }
 
     @Override
@@ -315,7 +405,7 @@ public class AddQuestion extends MenuActivity {
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
         textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString());
         for (int i = 0; i < options.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.option_substring) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
+            textToSpeak.add(getResources().getString(R.string.option) + " " + getResources().getString(R.string.is) + " " + options.get(i) + ".") ;
         }
         readyToPlay = true;
         currentSentence = 0;

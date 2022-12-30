@@ -61,29 +61,36 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     }
 
     @Override
+    public void applyChanges() {
+        if (quiz != null) {
+            quiz.update(title.getText().toString(), subject.getText().toString());
+        } else {
+            Database.Quizes.add(title.getText().toString(), subject.getText().toString());
+        }
+        instantBackPressed();
+    }
+
+    @Override
     public void registerListeners() {
         newQuiz.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (quiz != null) {
+                otherActivityBackPressed(AddQuiz.class, null, null);
+            }
         });
         addQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                quiz.update(title.getText().toString(), subject.getText().toString());
-            } else {
-                Database.Quizes.add(title.getText().toString(), subject.getText().toString());
+                confirmBackPressed();
             }
-            onBackPressed();
         });
-        resetQuiz.setOnClickListener(v -> onBackPressed());
-        addQuestion.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-            MenuActivity.id = null;
+        resetQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                MenuActivity.quizId = quiz.id;
+                onBackPressed();
             }
-            startActivity(intent);
+        });
+        addQuestion.setOnClickListener(v -> {
+            if (quiz != null) {
+                otherActivityBackPressed(AddQuestion.class, quiz.id, null);
+            }
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -100,33 +107,27 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
         });
         playQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                if (quiz != null) {
-                    MenuActivity.id = quiz.id;
-                    MenuActivity.quizId = quiz.id;
-                }
-                startActivity(intent);
+                otherActivityBackPressed(PlayQuiz.class, quiz.id, quiz.id);
             }
         });
         deleteQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                quiz.delete();
+                quiz.startDelete(this);
             }
-            onBackPressed();
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         quizList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (quiz != null) {
+                otherActivityBackPressed(QuizList.class, null, null);
+            }
         });
     }
 
     @Override
     public void fillData() {
-        if (MenuActivity.id != null) {
+        quiz = null;
+        if (id != null) {
             quiz = Database.Quizes.findId(id);
             Database.Questions.getForQuiz(id, this);
             playQuiz.setVisibility(View.VISIBLE);
@@ -137,8 +138,8 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                MenuActivity.id = null;
-                MenuActivity.quizId = null;
+                id = null;
+                quizId = null;
                 finish();
                 startActivity(intent);
             }
@@ -171,21 +172,15 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     }
 
     public void playQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-        MenuActivity.id = id;
         if (quiz != null) {
-            MenuActivity.quizId = quiz.id;
+            otherActivityBackPressed(PlayQuestion.class, quiz.id, id);
         }
-        startActivity(intent);
     }
 
     public void editQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-        MenuActivity.id = id;
         if (quiz != null) {
-            MenuActivity.quizId = quiz.id;
+            otherActivityBackPressed(AddQuestion.class, quiz.id, id);
         }
-        startActivity(intent);
     }
 
     public void deleteQuestion(int position) {
@@ -207,7 +202,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
         textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString() + ".");
         for (int i = 0; i < Database.Questions.questionList.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
+            textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
         }
         readyToPlay = true;
         currentSentence = 0;

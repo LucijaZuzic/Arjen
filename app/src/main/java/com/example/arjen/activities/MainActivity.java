@@ -71,8 +71,6 @@ public class MainActivity extends MenuActivity {
 
     @Override
     public void fillData() {
-        myTTS.initTTS(getApplicationContext());
-        setupTTS();
     }
 
     @Override

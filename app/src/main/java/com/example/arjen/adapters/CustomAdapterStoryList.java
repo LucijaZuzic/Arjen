@@ -57,8 +57,7 @@ public class CustomAdapterStoryList extends RecyclerView.Adapter<CustomAdapterSt
         playStory.setOnClickListener(v -> storyList.playStory(story.id));
         editStory.setOnClickListener(v -> storyList.editStory(story.id));
         deleteStory.setOnClickListener(v -> {
-            story.delete();
-            storyList.deleteStory(position);
+            story.startDelete(storyList, position);
         });
     }
 

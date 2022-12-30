@@ -2,8 +2,18 @@ package com.example.arjen.utility;
 
 import static com.example.arjen.utility.Database.Questions.questionList;
 
-import androidx.annotation.Nullable;
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+
+import com.example.arjen.R;
+import com.example.arjen.activities.PlayQuestion;
+import com.example.arjen.activities.QuizList;
+import com.example.arjen.activities.StoryList;
+import com.example.arjen.utility.interfaces.QuizInterface;
 import com.example.arjen.utility.interfaces.ShowListInterface;
 import com.example.arjen.utility.interfaces.ShowListSecondPartInterface;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -16,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 public class Database {
     public static class Questions {
@@ -29,6 +40,52 @@ public class Database {
                 }
             }
             return null;
+        }
+
+        public static List<Question> questionsAnswered = new ArrayList<>();
+
+        public static Question findRandomAfterListGet(Question originalQuestion) {
+            questionsAnswered.add(originalQuestion);
+            if (questionsAnswered.size() == questionList.size()) {
+                questionsAnswered.clear();
+                questionsAnswered.add(originalQuestion);
+            }
+            Boolean otherInSameQuiz = false;
+            for (Question question: questionList) {
+                if (!questionsAnswered.contains(question) && question.quizId.equals(originalQuestion.quizId)) {
+                    otherInSameQuiz = true;
+                    break;
+                }
+            }
+            Random randomNew = new Random();
+            int questionNumber = randomNew.nextInt(questionList.size());
+            Question newQuestion = questionList.get(questionNumber);
+            while (questionsAnswered.contains(newQuestion) || (otherInSameQuiz && !newQuestion.quizId.equals(originalQuestion.quizId))) {
+                questionNumber = randomNew.nextInt(questionList.size());
+                newQuestion = questionList.get(questionNumber);
+            }
+            return newQuestion;
+        }
+
+        public static void findRandom(Question originalQuestion, PlayQuestion playQuestion) {
+            questionList = new ArrayList<Question>();
+            db.collection("questions")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Map<String, Object> data = document.getData();
+                                    questionList.add(new Question(document.getId(),
+                                            data.get("questionText").toString(),
+                                            data.get("quizId").toString(),
+                                            Integer.parseInt(data.get("answer").toString()),
+                                            (List<String>) data.get("options")));
+                                }
+                                playQuestion.randomFound(findRandomAfterListGet(originalQuestion));
+                            }
+                        }
+                    });
         }
 
         public static void get() {
@@ -152,6 +209,50 @@ public class Database {
             public String quizId;
             public int answer;
             public List<String> options;
+            private QuizInterface quizInterface;
+            private Activity activity;
+            private int deletePosition;
+
+            private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            delete();
+                            if (quizInterface != null) {
+                                quizInterface.deleteQuestion(deletePosition);
+                            } else {
+                                activity.finish();
+                                activity.onBackPressed();
+                            }
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
+                }
+            };
+
+            public void startDelete(QuizInterface quizInterface, int deletePosition) {
+                this.activity = null;
+                this.quizInterface = quizInterface;
+                this.deletePosition = deletePosition;
+                AlertDialog.Builder builder = new AlertDialog.Builder((Context) quizInterface);
+                builder.setMessage(((Context) quizInterface).getApplicationContext().getResources().getString(R.string.question_delete))
+                        .setPositiveButton(((Context) quizInterface).getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(((Context) quizInterface).getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
+
+            public void startDelete(Activity activity) {
+                this.activity = activity;
+                this.quizInterface = null;
+                this.deletePosition = -1;
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(activity.getApplicationContext().getResources().getString(R.string.question_delete))
+                        .setPositiveButton(activity.getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(activity.getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
 
             @Override
             public boolean equals(Object o) {
@@ -345,6 +446,50 @@ public class Database {
         public static class Quiz {
             public String id;
             public String title, subject;
+            private QuizList myQuizList;
+            private Activity activity;
+            private int deletePosition;
+
+            private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            delete();
+                            if (myQuizList != null) {
+                                myQuizList.deleteQuiz(deletePosition);
+                            } else {
+                                activity.finish();
+                                activity.onBackPressed();
+                            }
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
+                }
+            };
+
+            public void startDelete(QuizList myQuizList, int deletePosition) {
+                this.activity = null;
+                this.myQuizList = myQuizList;
+                this.deletePosition = deletePosition;
+                AlertDialog.Builder builder = new AlertDialog.Builder(myQuizList);
+                builder.setMessage(myQuizList.getApplicationContext().getResources().getString(R.string.quiz_delete))
+                        .setPositiveButton(myQuizList.getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(myQuizList.getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
+
+            public void startDelete(Activity activity) {
+                this.activity = activity;
+                this.myQuizList = null;
+                this.deletePosition = -1;
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(activity.getApplicationContext().getResources().getString(R.string.quiz_delete))
+                        .setPositiveButton(activity.getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(activity.getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
 
             @Override
             public boolean equals(Object o) {
@@ -520,6 +665,50 @@ public class Database {
             public String id;
             public String title, storyText;
             public List<String> questions;
+            private StoryList myStoryList;
+            private Activity activity;
+            private int deletePosition;
+
+            private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            delete();
+                            if (myStoryList != null) {
+                                myStoryList.deleteStory(deletePosition);
+                            } else {
+                                activity.finish();
+                                activity.onBackPressed();
+                            }
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
+                }
+            };
+
+            public void startDelete(StoryList myStoryList, int deletePosition) {
+                this.activity = null;
+                this.myStoryList = myStoryList;
+                this.deletePosition = deletePosition;
+                AlertDialog.Builder builder = new AlertDialog.Builder(myStoryList);
+                builder.setMessage(myStoryList.getApplicationContext().getResources().getString(R.string.story_delete))
+                        .setPositiveButton(myStoryList.getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(myStoryList.getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
+
+            public void startDelete(Activity activity) {
+                this.activity = activity;
+                this.myStoryList = null;
+                this.deletePosition = -1;
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setMessage(activity.getApplicationContext().getResources().getString(R.string.story_delete))
+                        .setPositiveButton(activity.getApplicationContext().getResources().getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(activity.getApplicationContext().getResources().getString(R.string.no), dialogClickListener).show();
+            }
 
             @Override
             public boolean equals(Object o) {

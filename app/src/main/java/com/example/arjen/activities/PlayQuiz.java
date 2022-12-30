@@ -60,10 +60,12 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
     @Override
     public void registerListeners() {
         newQuiz.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (quiz != null) {
+                Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
+                id = null;
+                quizId = null;
+                startActivity(intent);
+            }
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -80,37 +82,35 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
         });
         back.setOnClickListener(v -> {
             if (quiz != null) {
-                MenuActivity.id = quiz.id;
-                MenuActivity.quizId = quiz.id;
+                onBackPressed();
             }
-            onBackPressed();
         });
         addQuiz.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(),AddQuiz.class);
             if (quiz != null) {
-                MenuActivity.id = quiz.id;
-                MenuActivity.quizId = quiz.id;
+                Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
+                startActivity(intent);
             }
-            startActivity(intent);
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         quizList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (quiz != null) {
+                Intent intent = new Intent(getApplicationContext(), QuizList.class);
+                id = null;
+                quizId = null;
+                startActivity(intent);
+            }
         });
         deleteQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                quiz.delete();
+                quiz.startDelete(this);
             }
-            onBackPressed();
         });
     }
 
     @Override
     public void fillData() {
+        quiz = null;
         if (id != null) {
             quiz = Database.Quizes.findId(id);
             Database.Questions.getForQuiz(id, this);
@@ -121,15 +121,15 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
                 subject.setText(quiz.subject);
             } else {
                 Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                MenuActivity.id = null;
-                MenuActivity.quizId = null;
+                id = null;
+                quizId = null;
                 finish();
                 startActivity(intent);
             }
         } else {
             Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
+            id = null;
+            quizId = null;
             finish();
             startActivity(intent);
         }
@@ -208,7 +208,7 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
         textToSpeak.add(getResources().getString(R.string.quiz_title) + " " + getResources().getString(R.string.is) + " " + title.getText().toString() + ".");
         textToSpeak.add(getResources().getString(R.string.subject) + " " + getResources().getString(R.string.is) + " " + subject.getText().toString() + ".");
         for (int i = 0; i < Database.Questions.questionList.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
+            textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + Database.Questions.questionList.get(i).questionText) ;
         }
         readyToPlay = true;
         currentSentence = 0;

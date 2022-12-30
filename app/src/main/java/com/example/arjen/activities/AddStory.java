@@ -1,9 +1,11 @@
 package com.example.arjen.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
@@ -70,31 +72,31 @@ public class AddStory extends MenuActivity {
     }
 
     @Override
+    public void applyChanges() {
+        if (story != null) {
+            story.update(title.getText().toString(), storyText.getText().toString(), questions);
+        } else {
+            Database.Stories.add(title.getText().toString(), storyText.getText().toString(), questions);
+        }
+        instantBackPressed();
+    }
+
+    @Override
     public void registerListeners() {
         newStory.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddStory.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            if (story != null) {
+                otherActivityBackPressed(AddStory.class, null, null);
+            }
         });
         addStory.setOnClickListener(v -> {
             if (story != null) {
-                story.update(title.getText().toString(), storyText.getText().toString(), questions);
-            } else {
-                Database.Stories.add(title.getText().toString(), storyText.getText().toString(), questions);
+                confirmBackPressed();
             }
-            if (story != null) {
-                id = story.id;
-            }
-            quizId = null;
-            onBackPressed();
         });
         resetStory.setOnClickListener(v -> {
             if (story != null) {
-                id = story.id;
+                onBackPressed();
             }
-            quizId = null;
-            onBackPressed();
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -111,19 +113,13 @@ public class AddStory extends MenuActivity {
         });
         playStory.setOnClickListener(v -> {
             if (story != null) {
-                Intent intent = new Intent(getApplicationContext(), PlayStory.class);
-                if (story != null) {
-                    id = story.id;
-                }
-                quizId = null;
-                startActivity(intent);
+                otherActivityBackPressed(PlayStory.class, null, story.id);
             }
         });
         deleteStory.setOnClickListener(v -> {
             if (story != null) {
-                story.delete();
+                story.startDelete(this);
             }
-            onBackPressed();
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playStoryText.setOnClickListener(v -> myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
@@ -147,15 +143,15 @@ public class AddStory extends MenuActivity {
             modeText.setText(getString(R.string.new_question));
         });
         storyList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            if (story != null) {
+                otherActivityBackPressed(StoryList.class, null, null);
+            }
         });
     }
 
     @Override
     public void fillData() {
+        story = null;
         if (id != null) {
             story = Database.Stories.findId(id);
             playStory.setVisibility(View.VISIBLE);
@@ -182,7 +178,6 @@ public class AddStory extends MenuActivity {
             questionRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
-        setupTTS();
     }
 
     public void swapQuestions(int one ,int two) {
@@ -193,7 +188,21 @@ public class AddStory extends MenuActivity {
         setupTTS();
     }
 
-    public void editQuestion(int position) {
+    private DialogInterface.OnClickListener editDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyEditQuestion(somePosition);
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyEditQuestion(int position) {
         questionText.setText(questions.get(position));
         question_to_edit = position;
         addQuestion.setVisibility(View.GONE);
@@ -203,7 +212,31 @@ public class AddStory extends MenuActivity {
         setupTTS();
     }
 
-    public void removeQuestion(int position) {
+    public void editQuestion(int position) {
+        somePosition = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
+    }
+
+    private int somePosition;
+
+    private DialogInterface.OnClickListener removeDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyRemoveQuestion(somePosition);
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyRemoveQuestion(int position) {
         if (questions.size() != 0) {
             questions.remove(position);
             customAdapterStoryQuestion.notifyItemRemoved(position);
@@ -219,7 +252,29 @@ public class AddStory extends MenuActivity {
         setupTTS();
     }
 
-    public void insertQuestion() {
+    public void removeQuestion(int position) {
+        somePosition = position;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.question_delete))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), removeDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), removeDialogClickListener).show();
+    }
+
+    private DialogInterface.OnClickListener insertDialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    actuallyInsertQuestion();
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
+
+    public void actuallyInsertQuestion() {
         questions.add(questionText.getText().toString());
         customAdapterStoryQuestion.notifyItemInserted(questions.size() - 1);
         questionRecyclerView.scrollToPosition(questions.size() - 1);
@@ -231,6 +286,13 @@ public class AddStory extends MenuActivity {
             noResults.setVisibility(View.GONE);
         }
         setupTTS();
+    }
+
+    public void insertQuestion() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), insertDialogClickListener)
+                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), insertDialogClickListener).show();
     }
 
     @Override
@@ -245,7 +307,7 @@ public class AddStory extends MenuActivity {
         textToSpeak.add(getResources().getString(R.string.story_title) + " " + getResources().getString(R.string.is) + " " +  title.getText().toString());
         textToSpeak.add(getResources().getString(R.string.story_next) + "." +  storyText.getText().toString());
         for (int i = 0; i < questions.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
+            textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
         }
         readyToPlay = true;
         currentSentence = 0;

@@ -1,5 +1,6 @@
 package com.example.arjen.adapters;
 
+import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +64,7 @@ public class CustomAdapterQuizQuestionList extends RecyclerView.Adapter<CustomAd
         playQuestion.setOnClickListener(v -> addQuiz.playQuestion(question.id));
         editQuestion.setOnClickListener(v -> addQuiz.editQuestion(question.id));
         deleteQuestion.setOnClickListener(v -> {
-            question.delete();
-            addQuiz.deleteQuestion(position);
+            question.startDelete(addQuiz, position);
         });
     }
 

@@ -61,10 +61,12 @@ public class PlayStory extends MenuActivity {
     @Override
     public void registerListeners() {
         newStory.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddStory.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (story != null) {
+                Intent intent = new Intent(getApplicationContext(), AddStory.class);
+                id = null;
+                quizId = null;
+                startActivity(intent);
+            }
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -79,40 +81,34 @@ public class PlayStory extends MenuActivity {
                 navigate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_arrow_forward_24));
             }
         });
-        back.setOnClickListener(v -> {
-            if (story != null) {
-                MenuActivity.id = story.id;
-            }
-            MenuActivity.quizId = null;
-            onBackPressed();
-        });
+        back.setOnClickListener(v ->  onBackPressed());
         addStory.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddStory.class);
             if (story != null) {
-                MenuActivity.id = story.id;
+                Intent intent = new Intent(getApplicationContext(), AddStory.class);
+                startActivity(intent);
             }
-            MenuActivity.quizId = null;
-            startActivity(intent);
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playStoryText.setOnClickListener(v -> myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         storyList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
-            startActivity(intent);
+            if (story != null) {
+                Intent intent = new Intent(getApplicationContext(), StoryList.class);
+                id = null;
+                quizId = null;
+                startActivity(intent);
+            }
         });
         deleteStory.setOnClickListener(v -> {
             if (story != null) {
-                story.delete();
+                story.startDelete(this);
             }
-            onBackPressed();
         });
     }
 
     @Override
     public void fillData() {
-        if (MenuActivity.id != null) {
+        story = null;
+        if (id != null) {
             story = Database.Stories.findId(id);
             addStory.setVisibility(View.VISIBLE);
             deleteStory.setVisibility(View.VISIBLE);
@@ -122,15 +118,15 @@ public class PlayStory extends MenuActivity {
                 questions = story.questions;
             } else {
                 Intent intent = new Intent(getApplicationContext(), StoryList.class);
-                MenuActivity.id = null;
-                MenuActivity.quizId = null;
+                id = null;
+                quizId = null;
                 finish();
                 startActivity(intent);
             }
         } else {
             Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            MenuActivity.id = null;
-            MenuActivity.quizId = null;
+            id = null;
+            quizId = null;
             finish();
             startActivity(intent);
         }
@@ -145,7 +141,6 @@ public class PlayStory extends MenuActivity {
             questionRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
-        setupTTS();
     }
 
     @Override
@@ -160,7 +155,7 @@ public class PlayStory extends MenuActivity {
         textToSpeak.add(getResources().getString(R.string.story_title) + " " + getResources().getString(R.string.is) + " " +  title.getText().toString());
         textToSpeak.add(getResources().getString(R.string.story_next) + "." +  storyText.getText().toString());
         for (int i = 0; i < questions.size(); i++) {
-            textToSpeak.add((i + 1) + ". " + getResources().getString(R.string.question_substring) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
+            textToSpeak.add(getResources().getString(R.string.question) + " " + getResources().getString(R.string.is) + " " + questions.get(i)) ;
         }
         readyToPlay = true;
         currentSentence = 0;

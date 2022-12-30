@@ -58,8 +58,7 @@ public class CustomAdapterQuizList extends RecyclerView.Adapter<CustomAdapterQui
         playQuiz.setOnClickListener(v -> quizList.playQuiz(quiz.id));
         editQuiz.setOnClickListener(v -> quizList.editQuiz(quiz.id));
         deleteQuiz.setOnClickListener(v -> {
-            quiz.delete();
-            quizList.deleteQuiz(position);
+            quiz.startDelete(quizList, position);
         });
     }
 

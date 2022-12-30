@@ -6,7 +6,7 @@
         android:title="@string/home"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/playAll"
-        android:icon="@drawable/ic_baseline_repeat_one_24"
+        android:icon="@drawable/ic_baseline_ads_click_24"
         android:title="@string/play_all"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/pause"

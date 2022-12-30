@@ -61,4 +61,18 @@
     <string name="check_answer">Provjera odgovora</string>
     <string name="choose_option">Odabir opcije</string>
     <string name="increase_number">Povećaj broj</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="story_delete">Jeste li sigurni da želite izbrisati priču? Ova radnja se ne može poništiti.</string>
+    <string name="quiz_delete">Jeste li sigurni da želite izbrisati kviz? Ova radnja se ne može poništiti.</string>
+    <string name="question_delete">Jeste li sigurni da želite izbrisati pitanje? Ova radnja se ne može poništiti.</string>
+    <string name="option_substring_editing">opciju</string>
+    <string name="go_back">Jeste li sigurni da želite odbaciti izmjene?</string>
+    <string name="confirm_change">Jeste li sigurni da želite prihvatiti izmjene?</string>
+    <string name="stopped">Čitanje je zaustavljeno</string>
+    <string name="play_all_active">Kontrola prelaskom prsta preko ekrana je omogućena</string>
+    <string name="play_all_inactive">Kontrola prelaskom prsta preko ekrana nije omogućena</string>
+    <string name="option_delete">Jeste li sigurni da želite izbrisati opciju? Ova radnja se ne može poništiti.</string>
+    <string name="showSpeaking">Trenutno se čita:</string>
+    <string name="option">Opcija</string>
 </resources>
