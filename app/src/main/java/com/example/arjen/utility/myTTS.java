@@ -100,6 +100,13 @@ public class myTTS {
         }
     }
 
+    public static void destroy() {
+        initialized = false;
+        if (TTS != null) {
+            TTS.shutdown();
+        }
+    }
+
     public static void initTTS(Context newContext) {
         initialized = false;
         context = newContext;

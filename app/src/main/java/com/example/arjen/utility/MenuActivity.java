@@ -63,6 +63,14 @@ public abstract class MenuActivity extends AppCompatActivity {
     private boolean timeout = false;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (this instanceof MainActivity) {
+            myTTS.destroy();
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         myTTS.stop();
