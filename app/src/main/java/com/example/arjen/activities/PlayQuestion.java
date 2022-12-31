@@ -158,11 +158,7 @@ public class PlayQuestion extends MenuActivity {
     public void chooseOption() {
         if (currentSentence > 2) {
             if (currentSentence - 3 == answer) {
-                if (myTTS.isPaused) {
-                    Toast.makeText(this, getResources().getString(R.string.correct), Toast.LENGTH_SHORT).show();
-                } else {
-                    myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
-                }
+                myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
                 musicDing.stop();
                 musicDing = MediaPlayer.create(this, R.raw.success);
                 musicDing.start();
@@ -172,11 +168,7 @@ public class PlayQuestion extends MenuActivity {
                     }
                 });
             } else {
-                if (myTTS.isPaused) {
-                    Toast.makeText(this, getResources().getString(R.string.incorrect), Toast.LENGTH_SHORT).show();
-                } else {
-                    myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
-                }
+                myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
                 musicDing.stop();
                 musicDing = MediaPlayer.create(this, R.raw.failure);
                 musicDing.start();

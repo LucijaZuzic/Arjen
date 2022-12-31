@@ -46,7 +46,7 @@ public class AddQuestion extends MenuActivity {
     public boolean optionExists() {
         for (int i = 0; i < options.size(); i++) {
             if (option_to_edit != i && options.get(i).equals(optionText.getText().toString())) {
-                Toast.makeText(this, getString(R.string.option_exists), Toast.LENGTH_SHORT).show();
+                myTTS.speak(getString(R.string.option_exists), TextToSpeech.QUEUE_FLUSH);
                 return true;
             }
         }
@@ -241,20 +241,12 @@ public class AddQuestion extends MenuActivity {
     public void chooseOption() {
         if (currentSentence > 2) {
             if (currentSentence - 3 == answer) {
-                if (myTTS.isPaused) {
-                    Toast.makeText(this, getResources().getString(R.string.correct), Toast.LENGTH_SHORT).show();
-                } else {
-                    myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
-                }
+                myTTS.speak(getResources().getString(R.string.correct), TextToSpeech.QUEUE_FLUSH);
                 musicDing.stop();
                 musicDing = MediaPlayer.create(this, R.raw.success);
                 musicDing.start();
             } else {
-                if (myTTS.isPaused) {
-                    Toast.makeText(this, getResources().getString(R.string.incorrect), Toast.LENGTH_SHORT).show();
-                } else {
-                    myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
-                }
+                myTTS.speak(getResources().getString(R.string.incorrect), TextToSpeech.QUEUE_FLUSH);
                 musicDing.stop();
                 musicDing = MediaPlayer.create(this, R.raw.failure);
                 musicDing.start();
@@ -272,19 +264,11 @@ public class AddQuestion extends MenuActivity {
     @Override
     public void applyChanges() {
         if (options.size() < 2) {
-            if (myTTS.isPaused) {
-                Toast.makeText(this, getResources().getString(R.string.no_options), Toast.LENGTH_SHORT).show();
-            } else {
-                myTTS.speak(getResources().getString(R.string.no_options), TextToSpeech.QUEUE_FLUSH);
-            }
+            myTTS.speak(getResources().getString(R.string.no_options), TextToSpeech.QUEUE_FLUSH);
             return;
         } else {
             if (answer == -1) {
-                if (myTTS.isPaused) {
-                    Toast.makeText(this, getResources().getString(R.string.no_answer), Toast.LENGTH_SHORT).show();
-                } else {
-                    myTTS.speak(getResources().getString(R.string.no_answer), TextToSpeech.QUEUE_FLUSH);
-                }
+                myTTS.speak(getResources().getString(R.string.no_answer), TextToSpeech.QUEUE_FLUSH);
                 return;
             }
         }
@@ -349,14 +333,10 @@ public class AddQuestion extends MenuActivity {
             optionText.setText("");
         });
         newQuestion.setOnClickListener(v -> {
-            if (question != null) {
-                otherActivityBackPressed(AddQuestion.class, question.quizId, null);
-            }
+            otherActivityBackPressed(AddQuestion.class, quizId, null);
         });
         questionList.setOnClickListener(v -> {
-            if (question != null) {
-                otherActivityBackPressed(PlayQuiz.class, null, question.quizId);
-            }
+            otherActivityBackPressed(PlayQuiz.class, null, quizId);
         });
     }
 

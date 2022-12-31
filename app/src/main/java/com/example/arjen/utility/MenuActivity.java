@@ -316,18 +316,10 @@ public abstract class MenuActivity extends AppCompatActivity {
                 return true;
             case R.id.playAll:
                 playAllActive = !playAllActive;
-                if (myTTS.isPaused) {
-                    if (playAllActive) {
-                        Toast.makeText(this.getApplicationContext(), getResources().getString(R.string.play_all_active), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this.getApplicationContext(), getResources().getString(R.string.play_all_inactive), Toast.LENGTH_SHORT).show();
-                    }
+                if (playAllActive) {
+                    myTTS.speak(getResources().getString(R.string.play_all_active), TextToSpeech.QUEUE_FLUSH);
                 } else {
-                    if (playAllActive) {
-                        myTTS.speak(getResources().getString(R.string.play_all_active), TextToSpeech.QUEUE_FLUSH);
-                    } else {
-                        myTTS.speak(getResources().getString(R.string.play_all_inactive), TextToSpeech.QUEUE_FLUSH);
-                    }
+                    myTTS.speak(getResources().getString(R.string.play_all_inactive), TextToSpeech.QUEUE_FLUSH);
                 }
                 menuPlayModeSetup();
                 return true;

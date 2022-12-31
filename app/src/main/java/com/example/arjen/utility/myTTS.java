@@ -92,11 +92,11 @@ public class myTTS {
     }
 
     public static void stop() {
+        textToSpeak.clear();
+        currentSentence = 0;
+        canContinue = true;
         if (TTS != null) {
             TTS.stop();
-            textToSpeak.clear();
-            currentSentence = 0;
-            canContinue = true;
         }
     }
 
@@ -136,6 +136,10 @@ public class myTTS {
     public static void speak(String text, int queueMode) {
         if (!canContinue) {
             myTTS.stop();
+        }
+        isPaused = false;
+        if (activitySpeaking != null) {
+            activitySpeaking.menuStartStopSetup();
         }
         if (queueMode == TextToSpeech.QUEUE_FLUSH) {
             textToSpeak.clear();
