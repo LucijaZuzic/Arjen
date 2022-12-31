@@ -43,6 +43,16 @@ public class AddQuestion extends MenuActivity {
         return R.layout.activity_add_question;
     }
 
+    public boolean optionExists() {
+        for (int i = 0; i < options.size(); i++) {
+            if (option_to_edit != i && options.get(i).equals(optionText.getText().toString())) {
+                Toast.makeText(this, getString(R.string.option_exists), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void findViews() {
         title = findViewById(R.id.title);
@@ -101,7 +111,7 @@ public class AddQuestion extends MenuActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    actuallyEditOption(somePosition);
+                    actuallyEditOption();
 
                 case DialogInterface.BUTTON_NEGATIVE:
                     //No button clicked
@@ -110,22 +120,29 @@ public class AddQuestion extends MenuActivity {
         }
     };
 
-    public void actuallyEditOption(int position) {
+    public void actuallyEditOption() {
+        if (optionExists()) {
+            return;
+        }
+        options.set(option_to_edit, optionText.getText().toString());
+        customAdapterQuizQuestionOption.notifyItemChanged(option_to_edit);
+        optionRecyclerView.scrollToPosition(option_to_edit);
+        option_to_edit = -1;
+        addOption.setVisibility(View.VISIBLE);
+        resetOption.setVisibility(View.GONE);
+        updateOption.setVisibility(View.GONE);
+        modeText.setText(getString(R.string.new_question));
+        optionText.setText("");
+        setupTTS();
+    }
+
+    public void editOption(int position) {
         optionText.setText(options.get(position));
         option_to_edit = position;
         addOption.setVisibility(View.GONE);
         resetOption.setVisibility(View.VISIBLE);
         updateOption.setVisibility(View.VISIBLE);
         modeText.setText(getString(R.string.editing) + " " + (position + 1) + ". " + getString(R.string.option_substring_editing));
-        setupTTS();
-    }
-
-    public void editOption(int position) {
-        somePosition = position;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
-                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
-                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
     }
 
     private int somePosition;
@@ -191,6 +208,9 @@ public class AddQuestion extends MenuActivity {
     };
 
     public void actuallyInsertOption() {
+        if (optionExists()) {
+            return;
+        }
         options.add(optionText.getText().toString());
         customAdapterQuizQuestionOption.notifyItemInserted(options.size() - 1);
         optionRecyclerView.scrollToPosition(options.size() - 1);
@@ -206,6 +226,7 @@ public class AddQuestion extends MenuActivity {
         for (int i = 0; i < options.size(); i++) {
             textToSpeak.add(getResources().getString(R.string.option) + " " + getResources().getString(R.string.is) + " " + options.get(i)) ;
         }
+        optionText.setText("");
         setupTTS();
     }
 
@@ -278,14 +299,10 @@ public class AddQuestion extends MenuActivity {
     @Override
     public void registerListeners() {
         addQuestion.setOnClickListener(v -> {
-            if (question != null) {
-                confirmBackPressed();
-            }
+            confirmBackPressed();
         });
         resetQuestion.setOnClickListener(v -> {
-            if (question != null) {
-                onBackPressed();
-            }
+            onBackPressed();
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -318,14 +335,10 @@ public class AddQuestion extends MenuActivity {
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         addOption.setOnClickListener(v -> insertOption());
         updateOption.setOnClickListener(v -> {
-            options.set(option_to_edit, optionText.getText().toString());
-            customAdapterQuizQuestionOption.notifyItemChanged(option_to_edit);
-            optionRecyclerView.scrollToPosition(option_to_edit);
-            option_to_edit = -1;
-            addOption.setVisibility(View.VISIBLE);
-            resetOption.setVisibility(View.GONE);
-            updateOption.setVisibility(View.GONE);
-            modeText.setText(getString(R.string.new_question));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                    .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
+                    .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
         });
         resetOption.setOnClickListener(v -> {
             option_to_edit = -1;
@@ -333,6 +346,7 @@ public class AddQuestion extends MenuActivity {
             resetOption.setVisibility(View.GONE);
             updateOption.setVisibility(View.GONE);
             modeText.setText(getString(R.string.new_option));
+            optionText.setText("");
         });
         newQuestion.setOnClickListener(v -> {
             if (question != null) {
@@ -341,7 +355,7 @@ public class AddQuestion extends MenuActivity {
         });
         questionList.setOnClickListener(v -> {
             if (question != null) {
-                otherActivityBackPressed(PlayQuiz.class, question.quizId, question.quizId);
+                otherActivityBackPressed(PlayQuiz.class, null, question.quizId);
             }
         });
     }
@@ -350,22 +364,16 @@ public class AddQuestion extends MenuActivity {
     public void fillData() {
         question = null;
         if (quizId == null) {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
             finish();
-            startActivity(intent);
+            startWithNewId(QuizList.class, null, null);
         } else {
             Database.Quizes.Quiz quiz = Database.Quizes.findId(quizId);
             if (quiz != null) {
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
-                Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(QuizList.class, null, null);
             }
             if (id != null) {
                 question = Database.Questions.findId(id);
@@ -373,16 +381,11 @@ public class AddQuestion extends MenuActivity {
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    id = question.quizId;
-                    quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    id = null;
-                    quizId = null;
                     finish();
-                    startActivity(intent);
+                    startWithNewId(QuizList.class, null, null);
                 }
             }
         }

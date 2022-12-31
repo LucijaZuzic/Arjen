@@ -73,19 +73,13 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
     @Override
     public void registerListeners() {
         newQuiz.setOnClickListener(v -> {
-            if (quiz != null) {
-                otherActivityBackPressed(AddQuiz.class, null, null);
-            }
+            otherActivityBackPressed(AddQuiz.class, null, null);
         });
         addQuiz.setOnClickListener(v -> {
-            if (quiz != null) {
-                confirmBackPressed();
-            }
+            confirmBackPressed();
         });
         resetQuiz.setOnClickListener(v -> {
-            if (quiz != null) {
-                onBackPressed();
-            }
+            onBackPressed();
         });
         addQuestion.setOnClickListener(v -> {
             if (quiz != null) {
@@ -118,9 +112,7 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         quizList.setOnClickListener(v -> {
-            if (quiz != null) {
-                otherActivityBackPressed(QuizList.class, null, null);
-            }
+            otherActivityBackPressed(QuizList.class, null, null);
         });
     }
 
@@ -137,11 +129,8 @@ public class AddQuiz extends MenuActivity implements ShowListInterface, QuizInte
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
-                Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(QuizList.class, null, null);
             }
         }
         questionRecyclerView = findViewById(R.id.questionRecyclerView);

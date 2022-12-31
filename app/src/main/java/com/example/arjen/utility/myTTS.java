@@ -79,11 +79,13 @@ public class myTTS {
 
     public static void play() {
         isPaused = false;
+        canContinue = true;
         speak(null, TextToSpeech.QUEUE_ADD);
     }
 
     public static void pause() {
         isPaused = true;
+        canContinue = true;
         if (TTS != null) {
             TTS.stop();
         }

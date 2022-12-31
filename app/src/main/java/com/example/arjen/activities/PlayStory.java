@@ -61,12 +61,7 @@ public class PlayStory extends MenuActivity {
     @Override
     public void registerListeners() {
         newStory.setOnClickListener(v -> {
-            if (story != null) {
-                Intent intent = new Intent(getApplicationContext(), AddStory.class);
-                id = null;
-                quizId = null;
-                startActivity(intent);
-            }
+            startWithNewId(AddStory.class, null, null);
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -84,19 +79,13 @@ public class PlayStory extends MenuActivity {
         back.setOnClickListener(v ->  onBackPressed());
         addStory.setOnClickListener(v -> {
             if (story != null) {
-                Intent intent = new Intent(getApplicationContext(), AddStory.class);
-                startActivity(intent);
+                startWithNewId(AddStory.class, id, null);
             }
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playStoryText.setOnClickListener(v -> myTTS.speak(storyText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         storyList.setOnClickListener(v -> {
-            if (story != null) {
-                Intent intent = new Intent(getApplicationContext(), StoryList.class);
-                id = null;
-                quizId = null;
-                startActivity(intent);
-            }
+            startWithNewId(StoryList.class, null, null);
         });
         deleteStory.setOnClickListener(v -> {
             if (story != null) {
@@ -117,18 +106,12 @@ public class PlayStory extends MenuActivity {
                 storyText.setText(story.storyText);
                 questions = story.questions;
             } else {
-                Intent intent = new Intent(getApplicationContext(), StoryList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(StoryList.class, null, null);
             }
         } else {
-            Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            id = null;
-            quizId = null;
             finish();
-            startActivity(intent);
+            startWithNewId(StoryList.class, null, null);
         }
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         CustomAdapterPlayStoryQuestion customAdapterPlayStoryQuestion = new CustomAdapterPlayStoryQuestion(questions, this);

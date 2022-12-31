@@ -75,17 +75,11 @@ public class StoryList extends MenuActivity implements ShowListInterface {
     }
 
     public void playStory(String id) {
-        Intent intent = new Intent(getApplicationContext(), PlayStory.class);
-        MenuActivity.id = id;
-        quizId = null;
-        startActivity(intent);
+        startWithNewId(PlayStory.class, id, null);
     }
 
     public void editStory(String id) {
-        Intent intent = new Intent(getApplicationContext(), AddStory.class);
-        MenuActivity.id = id;
-        quizId = null;
-        startActivity(intent);
+        startWithNewId(AddStory.class, id, null);
     }
 
     public void deleteStory(int position) {

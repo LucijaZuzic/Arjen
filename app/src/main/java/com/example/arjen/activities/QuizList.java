@@ -82,17 +82,11 @@ public class QuizList extends MenuActivity implements ShowListInterface {
     }
 
     public void playQuiz(String id) {
-        Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-        MenuActivity.id = id;
-        quizId = id;
-        startActivity(intent);
+        startWithNewId(PlayQuiz.class, id, null);
     }
 
     public void editQuiz(String id) {
-        Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-        MenuActivity.id = id;
-        quizId = id;
-        startActivity(intent);
+        startWithNewId(AddQuiz.class, id, null);
     }
 
     public void deleteQuiz(int position) {

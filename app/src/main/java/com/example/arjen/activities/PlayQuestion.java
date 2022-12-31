@@ -83,22 +83,17 @@ public class PlayQuestion extends MenuActivity {
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         back.setOnClickListener(v -> {
-            if (question != null) {
-                onBackPressed();
-            }
+            onBackPressed();
         });
         addQuestion.setOnClickListener(v -> {
             if (question != null) {
-                Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-                startActivity(intent);
+                startWithNewId(AddQuestion.class, question.id, question.quizId);
             }
         });
         playQuestionText.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         newQuestion.setOnClickListener(v -> {
             if (question != null) {
-                Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-                id = null;
-                startActivity(intent);
+                startWithNewId(AddQuestion.class, null, question.quizId);
             }
         });
         deleteQuestion.setOnClickListener(v -> {
@@ -107,11 +102,7 @@ public class PlayQuestion extends MenuActivity {
             }
         });
         questionList.setOnClickListener(v -> {
-            if (question != null) {
-                Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                id = quizId;
-                startActivity(intent);
-            }
+            startWithNewId(QuestionList.class, null, null);
         });
     }
 
@@ -123,22 +114,16 @@ public class PlayQuestion extends MenuActivity {
     public void fillData() {
         question = null;
         if (quizId == null) {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
             finish();
-            startActivity(intent);
+            startWithNewId(QuizList.class, null, null);
         } else {
             Database.Quizes.Quiz quiz = Database.Quizes.findId(quizId);
             if (quiz != null) {
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
-                Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(QuizList.class, null, null);
             }
             if (id != null) {
                 question = Database.Questions.findId(id);
@@ -146,22 +131,15 @@ public class PlayQuestion extends MenuActivity {
                 deleteQuestion.setVisibility(View.VISIBLE);
                 if (question != null) {
                     questionText.setText(question.questionText);
-                    id = question.id;
-                    quizId = question.quizId;
                     answer = question.answer;
                     options = question.options;
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                    id = null;
-                    quizId = null;
                     finish();
-                    startActivity(intent);
+                    startWithNewId(QuizList.class, null, null);
                 }
             } else {
-                Intent intent = new Intent(getApplicationContext(), PlayQuiz.class);
-                id = quizId;
                 finish();
-                startActivity(intent);
+                startWithNewId(PlayQuiz.class, quizId, null);
             }
         }
         optionRecyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -21,8 +21,8 @@
     <string name="input_option">Unesite opciju</string>
     <string name="stories">Priče</string>
     <string name="quizes">Kvizovi</string>
-    <string name="no_answer">Pitanje mora imati naznačen točan odgovor.</string>
-    <string name="no_options">Pitanje mora imati barem dva moguća odgovora.</string>
+    <string name="no_answer">Pitanje mora imati naznačen točan odgovor</string>
+    <string name="no_options">Pitanje mora imati barem dva moguća odgovora</string>
     <string name="pause">Pauziraj</string>
     <string name="play">Nastavi</string>
     <string name="play_all">Pročitaj sve</string>
@@ -75,4 +75,5 @@
     <string name="option_delete">Jeste li sigurni da želite izbrisati opciju? Ova radnja se ne može poništiti.</string>
     <string name="showSpeaking">Trenutno se čita:</string>
     <string name="option">Opcija</string>
+    <string name="option_exists">Opcija s istim tekstom već postoji</string>
 </resources>

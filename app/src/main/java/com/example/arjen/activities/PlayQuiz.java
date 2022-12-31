@@ -60,12 +60,7 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
     @Override
     public void registerListeners() {
         newQuiz.setOnClickListener(v -> {
-            if (quiz != null) {
-                Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-                id = null;
-                quizId = null;
-                startActivity(intent);
-            }
+            startWithNewId(AddQuiz.class, null, null);
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -81,25 +76,17 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
             }
         });
         back.setOnClickListener(v -> {
-            if (quiz != null) {
-                onBackPressed();
-            }
+            onBackPressed();
         });
         addQuiz.setOnClickListener(v -> {
             if (quiz != null) {
-                Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-                startActivity(intent);
+                startWithNewId(AddQuiz.class, id, null);
             }
         });
         playTitle.setOnClickListener(v -> myTTS.speak(title.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         playSubject.setOnClickListener(v -> myTTS.speak(subject.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         quizList.setOnClickListener(v -> {
-            if (quiz != null) {
-                Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
-                startActivity(intent);
-            }
+            startWithNewId(QuizList.class, null, null);
         });
         deleteQuiz.setOnClickListener(v -> {
             if (quiz != null) {
@@ -120,18 +107,12 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
                 title.setText(quiz.title);
                 subject.setText(quiz.subject);
             } else {
-                Intent intent = new Intent(getApplicationContext(), QuizList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(QuizList.class, null, null);
             }
         } else {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
             finish();
-            startActivity(intent);
+            startWithNewId(QuizList.class, null, null);
         }
         questionRecyclerView = findViewById(R.id.questionRecyclerView);
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -164,21 +145,15 @@ public class PlayQuiz extends MenuActivity implements ShowListInterface, QuizInt
     }
 
     public void playQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-        MenuActivity.id = id;
         if (quiz != null) {
-            MenuActivity.quizId = quiz.id;
+            startWithNewId(PlayQuestion.class, id, quiz.id);
         }
-        startActivity(intent);
     }
 
     public void editQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-        MenuActivity.id = id;
         if (quiz != null) {
-            MenuActivity.quizId = quiz.id;
+            startWithNewId(PlayQuestion.class, id, quiz.id);
         }
-        startActivity(intent);
     }
 
     public void deleteQuestion(int position) {

@@ -164,12 +164,9 @@ public class QuestionList extends MenuActivity implements ShowListInterface, Sho
 
     @Override
     public void playQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-        MenuActivity.id = id;
         for (Database.Questions.Question question: Database.Questions.questionList) {
             if (Objects.equals(question.id, id)) {
-                MenuActivity.quizId = question.quizId;
-                startActivity(intent);
+                startWithNewId(PlayQuestion.class, question.id, question.quizId);
                 return;
             }
         }
@@ -177,12 +174,9 @@ public class QuestionList extends MenuActivity implements ShowListInterface, Sho
 
     @Override
     public void editQuestion(String id) {
-        Intent intent = new Intent(getApplicationContext(), AddQuestion.class);
-        MenuActivity.id = id;
         for (Database.Questions.Question question: Database.Questions.questionList) {
             if (Objects.equals(question.id, id)) {
-                MenuActivity.quizId = question.quizId;
-                startActivity(intent);
+                startWithNewId(AddQuestion.class, question.id, question.quizId);
                 return;
             }
         }

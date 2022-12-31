@@ -1,6 +1,7 @@
 package com.example.arjen.utility;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,7 +52,7 @@ public abstract class MenuActivity extends AppCompatActivity {
     private float x1, x2, y1, y2;
     static final int MIN_DISTANCE = 150;
     public boolean readyToPlay = false;
-    public static String id, quizId;
+    public String id, quizId;
     public int numClick = 0;
     public int scrollPosition = 0;
     public ImageButton previousScroll, nextScroll;
@@ -58,7 +60,6 @@ public abstract class MenuActivity extends AppCompatActivity {
     private LinearLayout bottom;
     private Boolean blocked = false;
     public static MediaPlayer musicDing;
-    public static Class previousClass;
     private boolean timeout = false;
 
     @Override
@@ -68,7 +69,6 @@ public abstract class MenuActivity extends AppCompatActivity {
         if (musicDing != null  && musicDing.isPlaying()) {
             musicDing.stop();
         }
-        previousClass = this.getClass();
     }
 
     @Override
@@ -155,6 +155,13 @@ public abstract class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+        Intent intent = getIntent();
+        if (intent.hasExtra("id")) {
+            id = intent.getExtras().getString("id");
+        }
+        if (intent.hasExtra("quizId")) {
+            quizId = intent.getExtras().getString("quizId");
+        }
         findViews();
         setRecyclerView();
         previousScroll = findViewById(R.id.previousScroll);
@@ -263,7 +270,6 @@ public abstract class MenuActivity extends AppCompatActivity {
                                 onBackPressed();
                             } else {
                                 if (myTTS.isPaused) {
-                                    myTTS.speak(getResources().getString(R.string.started), TextToSpeech.QUEUE_FLUSH);
                                     myTTS.play();
                                 } else {
                                     Toast.makeText(this.getApplicationContext(), getResources().getString(R.string.stopped), Toast.LENGTH_SHORT).show();
@@ -327,7 +333,6 @@ public abstract class MenuActivity extends AppCompatActivity {
                 return true;
             case R.id.pause:
                 if (myTTS.isPaused) {
-                    myTTS.speak(getResources().getString(R.string.started), TextToSpeech.QUEUE_FLUSH);
                     myTTS.play();
                 } else {
                     Toast.makeText(this.getApplicationContext(), getResources().getString(R.string.stopped), Toast.LENGTH_SHORT).show();
@@ -377,14 +382,10 @@ public abstract class MenuActivity extends AppCompatActivity {
     public abstract void setRecyclerView();
 
     public void playNext() {
-        if (numClick == 0) {
-            myTTS.speak(activityToText(), TextToSpeech.QUEUE_FLUSH);
-        } else {
-            if (numClick > 1) {
-                nextNumber();
-            }
-            myTTS.speak(textToSpeak.get(currentSentence), TextToSpeech.QUEUE_FLUSH);
+        if (numClick > 0) {
+            nextNumber();
         }
+        myTTS.speak(textToSpeak.get(currentSentence), TextToSpeech.QUEUE_FLUSH);
         numClick++;
     }
 
@@ -431,15 +432,22 @@ public abstract class MenuActivity extends AppCompatActivity {
     private Class listActivity;
     private String newId, newQuizId;
 
+    public void startWithNewId(Class listActivity, String newId, String newQuizId) {
+        this.listActivity = listActivity;
+        this.newQuizId = newQuizId;
+        this.newId = newId;
+        Intent intent = new Intent(getApplicationContext(), listActivity);
+        intent.putExtra("id", newId);
+        intent.putExtra("quizId", newQuizId);
+        startActivity(intent);
+    }
+
     private DialogInterface.OnClickListener listDialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    Intent intent = new Intent(getApplicationContext(), listActivity);
-                    id = newId;
-                    quizId = newQuizId;
-                    startActivity(intent);
+                    startWithNewId(listActivity, newId, newQuizId);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
@@ -457,16 +465,11 @@ public abstract class MenuActivity extends AppCompatActivity {
                     .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), backDialogClickListener)
                     .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), backDialogClickListener).show();
         } else {
-            instantBackPressed();
+            super.onBackPressed();
         }
     }
 
     public void instantBackPressed() {
-        if (this.getClass() == PlayQuestion.class || this.getClass() == AddQuestion.class) {
-            if (previousClass == PlayQuiz.class || previousClass == AddQuiz.class) {
-                id = quizId;
-            }
-        }
         super.onBackPressed();
     }
 

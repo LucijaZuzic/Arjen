@@ -84,19 +84,13 @@ public class AddStory extends MenuActivity {
     @Override
     public void registerListeners() {
         newStory.setOnClickListener(v -> {
-            if (story != null) {
-                otherActivityBackPressed(AddStory.class, null, null);
-            }
+            otherActivityBackPressed(AddStory.class, null, null);
         });
         addStory.setOnClickListener(v -> {
-            if (story != null) {
-                confirmBackPressed();
-            }
+            confirmBackPressed();
         });
         resetStory.setOnClickListener(v -> {
-            if (story != null) {
-                onBackPressed();
-            }
+            onBackPressed();
         });
         navigate.setOnClickListener(v -> {
             if (page == 1) {
@@ -126,14 +120,10 @@ public class AddStory extends MenuActivity {
         playQuestion.setOnClickListener(v -> myTTS.speak(questionText.getText().toString(), TextToSpeech.QUEUE_FLUSH));
         addQuestion.setOnClickListener(v -> insertQuestion());
         updateQuestion.setOnClickListener(v -> {
-            questions.set(question_to_edit, questionText.getText().toString());
-            customAdapterStoryQuestion.notifyItemChanged(question_to_edit);
-            questionRecyclerView.scrollToPosition(question_to_edit);
-            question_to_edit = -1;
-            addQuestion.setVisibility(View.VISIBLE);
-            resetQuestion.setVisibility(View.GONE);
-            updateQuestion.setVisibility(View.GONE);
-            modeText.setText(getString(R.string.new_question));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
+                    .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
+                    .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
         });
         resetQuestion.setOnClickListener(v -> {
             question_to_edit = -1;
@@ -141,11 +131,10 @@ public class AddStory extends MenuActivity {
             resetQuestion.setVisibility(View.GONE);
             updateQuestion.setVisibility(View.GONE);
             modeText.setText(getString(R.string.new_question));
+            questionText.setText("");
         });
         storyList.setOnClickListener(v -> {
-            if (story != null) {
-                otherActivityBackPressed(StoryList.class, null, null);
-            }
+            otherActivityBackPressed(StoryList.class, null, null);
         });
     }
 
@@ -161,11 +150,8 @@ public class AddStory extends MenuActivity {
                 storyText.setText(story.storyText);
                 questions = story.questions;
             } else {
-                Intent intent = new Intent(getApplicationContext(), StoryList.class);
-                id = null;
-                quizId = null;
                 finish();
-                startActivity(intent);
+                startWithNewId(StoryList.class, null, null);
             }
         }
         questionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -193,7 +179,7 @@ public class AddStory extends MenuActivity {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    actuallyEditQuestion(somePosition);
+                    actuallyEditQuestion();
 
                 case DialogInterface.BUTTON_NEGATIVE:
                     //No button clicked
@@ -202,22 +188,26 @@ public class AddStory extends MenuActivity {
         }
     };
 
-    public void actuallyEditQuestion(int position) {
+    public void actuallyEditQuestion() {
+        questions.set(question_to_edit, questionText.getText().toString());
+        customAdapterStoryQuestion.notifyItemChanged(question_to_edit);
+        questionRecyclerView.scrollToPosition(question_to_edit);
+        question_to_edit = -1;
+        addQuestion.setVisibility(View.VISIBLE);
+        resetQuestion.setVisibility(View.GONE);
+        updateQuestion.setVisibility(View.GONE);
+        modeText.setText(getString(R.string.new_question));
+        questionText.setText("");
+        setupTTS();
+    }
+
+    public void editQuestion(int position) {
         questionText.setText(questions.get(position));
         question_to_edit = position;
         addQuestion.setVisibility(View.GONE);
         resetQuestion.setVisibility(View.VISIBLE);
         updateQuestion.setVisibility(View.VISIBLE);
         modeText.setText(getString(R.string.editing) + " " + (position + 1) + ". " + getString(R.string.question_substring));
-        setupTTS();
-    }
-
-    public void editQuestion(int position) {
-        somePosition = position;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(this.getApplicationContext().getResources().getString(R.string.confirm_change))
-                .setPositiveButton(this.getApplicationContext().getResources().getString(R.string.yes), editDialogClickListener)
-                .setNegativeButton(this.getApplicationContext().getResources().getString(R.string.no), editDialogClickListener).show();
     }
 
     private int somePosition;
@@ -285,6 +275,7 @@ public class AddStory extends MenuActivity {
             questionRecyclerView.setVisibility(View.VISIBLE);
             noResults.setVisibility(View.GONE);
         }
+        questionText.setText("");
         setupTTS();
     }
 
