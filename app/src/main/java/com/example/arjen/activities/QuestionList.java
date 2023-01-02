@@ -90,10 +90,7 @@ public class QuestionList extends MenuActivity implements ShowListInterface, Sho
             }
         });
         addQuiz.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddQuiz.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(AddQuiz.class, null, null);
         });
     }
 

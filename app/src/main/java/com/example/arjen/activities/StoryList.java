@@ -45,10 +45,7 @@ public class StoryList extends MenuActivity implements ShowListInterface {
     @Override
     public void registerListeners() {
         addStory.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), AddStory.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(AddStory.class, null, null);
         });
         startSearch.setOnClickListener(v -> Database.Stories.getWithTitle(searchStory.getText().toString(), this));
     }

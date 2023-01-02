@@ -30,42 +30,26 @@ public class MainActivity extends MenuActivity {
     @Override
     public void registerListeners() {
         storyList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), StoryList.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(StoryList.class, null, null);
         });
         quizList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), QuizList.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(QuizList.class, null, null);
         });
         questionList.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), QuestionList.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(QuestionList.class, null, null);
         });
         numbersSound.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), Numbers.class);
-            id = null;
-            quizId = null;
             intent.putExtra("words", 0);
             startActivity(intent);
         });
         numbersWords.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), Numbers.class);
-            id = null;
-            quizId = null;
             intent.putExtra("words", 1);
             startActivity(intent);
         });
         numbersWordsSound.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), Numbers.class);
-            id = null;
-            quizId = null;
-            startActivity(intent);
+            startWithNewId(Numbers.class, null, null);
         });
     }
 
@@ -95,8 +79,6 @@ public class MainActivity extends MenuActivity {
                 }
             }
         }
-        id = null;
-        quizId = null;
         startActivity(intent);
     }
 

@@ -180,10 +180,7 @@ public class PlayQuestion extends MenuActivity {
 
     public void randomFound(Database.Questions.Question otherQuestion) {
         if (otherQuestion != null) {
-            Intent intent = new Intent(getApplicationContext(), PlayQuestion.class);
-            id = otherQuestion.id;
-            quizId = otherQuestion.quizId;
-            startActivity(intent);
+            startWithNewId(PlayQuestion.class, otherQuestion.id, otherQuestion.quizId);
         }
     }
 

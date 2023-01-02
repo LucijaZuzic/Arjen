@@ -316,10 +316,7 @@ public abstract class MenuActivity extends AppCompatActivity {
                 if (this instanceof AddQuiz || this instanceof AddQuestion || this instanceof AddStory) {
                     otherActivityBackPressed(MainActivity.class, null, null);
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    id = null;
-                    quizId = null;
-                    startActivity(intent);
+                    startWithNewId(MainActivity.class, null, null);
                 }
                 return true;
             case R.id.playAll:
